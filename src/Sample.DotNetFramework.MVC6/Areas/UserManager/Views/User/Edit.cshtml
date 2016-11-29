@@ -1,0 +1,31 @@
+﻿@model UserViewModel
+
+@{
+    ViewBag.Title = "Modification d'un utilisateur";
+}
+
+<h2>@ViewBag.Title</h2>
+<div class="row">
+    <div class="col-md-12">
+        <section>
+            <form asp-area="UserManager" asp-controller="User" asp-action="Edit" method="post" class="form-horizontal" role="form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <fieldset>
+                    <legend>Informations</legend>
+                    <input asp-for="UserId" type="hidden" />
+                    @Html.EditorFor(m => m, "UserEdit")
+                </fieldset>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-default">Modifier</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("~/Views/Shared/_ValidationScriptsPartial.cshtml"); }
+}

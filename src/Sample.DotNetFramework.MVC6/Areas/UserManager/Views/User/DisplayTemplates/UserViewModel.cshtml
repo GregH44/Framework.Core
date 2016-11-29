@@ -1,0 +1,17 @@
+﻿@model UserViewModel
+
+<tr>
+    <td>@Model.FirstName</td>
+    <td>@Model.LastName</td>
+    <td>@Model.Account</td>
+    <td>
+        <div class="btn-group" role="group">
+            @{
+                var values = new Dictionary<string, string> { { "id", Model.UserId.ToString() } };
+            }
+            <a asp-area="UserManager" asp-controller="User" asp-action="Edit" asp-all-route-data="values" class="btn btn-xs btn-default">Modifier</a>
+            <a asp-area="UserManager" asp-controller="User" asp-action="Delete" asp-all-route-data="values" class="btn btn-xs btn-default">Supprimer</a>
+        </div>
+
+    </td>
+</tr>

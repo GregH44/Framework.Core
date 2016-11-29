@@ -1,0 +1,21 @@
+﻿@model IEnumerable<UserViewModel>
+
+@{ 
+    ViewBag.Title = "Liste des utilisateurs";
+}
+
+<h2>@ViewBag.Title</h2>
+<a asp-area="UserManager" asp-controller="User" asp-action="Create" class="btn btn-default btn-xs">Créer un utilisateur</a>
+<table class="table table-bordered table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Compte</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @Html.DisplayForModel()
+    </tbody>
+</table>

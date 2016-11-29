@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+
+  "dependencies": {
+    "Framework.Core": "1.0.0",
+    "NETStandard.Library": "1.6.0",
+    "Sample.DotNetFramework.Common": "1.0.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  },
+
+  "buildOptions": {
+    "keyFile": "Sample.DotNetFramework.DataLayer"
+  }
+}
