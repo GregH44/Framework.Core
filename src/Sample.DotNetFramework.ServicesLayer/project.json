@@ -15,6 +15,5 @@
   },
 
   "buildOptions": {
-    "keyFile": "Sample.DotNetFramework.ServicesLayer"
   }
 }

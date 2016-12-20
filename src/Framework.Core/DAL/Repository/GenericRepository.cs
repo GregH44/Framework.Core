@@ -12,26 +12,26 @@ namespace Framework.Core.DAL.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class
     {
-        protected DataBaseContext context = null;
+        protected IDataBaseContext context = null;
         protected DbSet<TEntity> dbSet = null;
 
-        public GenericRepository(DataBaseContext context)
+        public GenericRepository(IDataBaseContext context)
         {
             this.context = context;
             dbSet = context.Set<TEntity>();
         }
 
-        public void Add(TEntity entity)
+        public virtual void Add(TEntity entity)
         {
             dbSet.Add(entity);
         }
 
-        public void Add(IEnumerable<TEntity> entities)
+        public virtual void Add(IEnumerable<TEntity> entities)
         {
             dbSet.AddRange(entities);
         }
 
-        public void Delete(Expression<Func<TEntity, bool>> predicate)
+        public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -53,17 +53,17 @@ namespace Framework.Core.DAL.Repository
             }
         }
 
-        public void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             dbSet.Remove(entity);
         }
 
-        public void Delete(IEnumerable<TEntity> entities)
+        public virtual void Delete(IEnumerable<TEntity> entities)
         {
             dbSet.RemoveRange(entities);
         }
 
-        public bool Exists(Expression<Func<TEntity, bool>> predicate)
+        public virtual bool Exists(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace Framework.Core.DAL.Repository
             }
         }
 
-        public TEntity Get(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        public virtual TEntity Get(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace Framework.Core.DAL.Repository
             }
         }
 
-        public async Task<IEnumerable<TEntity>> GetList(Expression<Func<TEntity, bool>> predicate = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, int? skip = default(int?), int? take = default(int?), params Expression<Func<TEntity, object>>[] includeProperties)
+        public virtual async Task<IEnumerable<TEntity>> GetList(Expression<Func<TEntity, bool>> predicate = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, int? skip = default(int?), int? take = default(int?), params Expression<Func<TEntity, object>>[] includeProperties)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace Framework.Core.DAL.Repository
                     query = query.Take(take.Value);
                 }
 
-                if (includeProperties.Any())
+                if (includeProperties != null && includeProperties.Any())
                 {
                     foreach (var includeProperty in includeProperties)
                     {
@@ -154,7 +154,7 @@ namespace Framework.Core.DAL.Repository
             }
         }
 
-        public int Save()
+        public virtual int Save()
         {
             try
             {
@@ -166,12 +166,12 @@ namespace Framework.Core.DAL.Repository
             }
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             dbSet.Update(entity);
         }
 
-        public void Update(IEnumerable<TEntity> entities)
+        public virtual void Update(IEnumerable<TEntity> entities)
         {
             dbSet.UpdateRange(entities);
         }

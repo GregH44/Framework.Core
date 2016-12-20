@@ -9,10 +9,11 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
+    "Microsoft.AspNetCore.Routing": "1.0.1",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
     "Microsoft.AspNetCore.StaticFiles": "1.0.0",
-    "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.EntityFrameworkCore": "1.0.1",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",
@@ -27,7 +28,8 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "Sample.DotNetFramework.Common": "1.0.0-*",
     "Sample.DotNetFramework.ServicesLayer": "1.0.0-*",
-    "Serilog.Extensions.Logging.File": "1.0.0"
+    "Serilog.Extensions.Logging.File": "1.0.0",
+    "System.Reflection.TypeExtensions": "4.1.0"
   },
 
   "tools": {
@@ -47,8 +49,7 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true,
-    "keyFile": "Sample.DotNetFramework.MVC6"
+    "preserveCompilationContext": true
   },
 
   "publishOptions": {

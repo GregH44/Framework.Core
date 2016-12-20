@@ -2,9 +2,10 @@
   "version": "1.0.0",
 
   "dependencies": {
+    "Dapper": "1.50.2",
     "Microsoft.AspNetCore.Mvc.Core": "1.0.1",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.1",
-    "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.EntityFrameworkCore": "1.0.1",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
@@ -22,6 +23,5 @@
   },
 
   "buildOptions": {
-    "keyFile": "Framework.Core"
   }
 }

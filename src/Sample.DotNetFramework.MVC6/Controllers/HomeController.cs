@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Sample.DotNetFramework.DataLayer.Infrastructure;
 
 namespace Sample.DotNetFramework.MVC6.Controllers
 {
@@ -16,14 +19,14 @@ namespace Sample.DotNetFramework.MVC6.Controllers
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
-
+            
             return View();
         }
 
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
-
+            
             return View();
         }
 

@@ -3,3 +3,15 @@
 ################################################################################
 
 /.vs
+/src/Framework.Core/bin/Debug/netstandard1.6
+/src/Framework.Core/obj/Debug/netstandard1.6
+/src/Sample.DotNetFramework.Common/bin/Debug/netstandard1.6
+/src/Sample.DotNetFramework.Common/obj/Debug/netstandard1.6
+/src/Sample.DotNetFramework.DataLayer/bin/Debug/netstandard1.6
+/src/Sample.DotNetFramework.DataLayer/obj/Debug/netstandard1.6
+/src/Sample.DotNetFramework.MVC6/bin/Debug/netcoreapp1.0
+/src/Sample.DotNetFramework.MVC6/obj/Debug/netcoreapp1.0
+/src/Sample.DotNetFramework.ServicesLayer/bin/Debug/netstandard1.6
+/src/Sample.DotNetFramework.ServicesLayer/obj/Debug/netstandard1.6
+*.user
+/src/Sample.DotNetFramework.MVC6/appsettings.LFR008523.json

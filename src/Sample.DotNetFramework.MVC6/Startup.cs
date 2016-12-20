@@ -1,8 +1,10 @@
 ﻿using Framework.Core.Attributes;
 using Framework.Core.Configuration;
+using Framework.Core.DAL.Infrastructure;
+using Framework.Core.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,6 +19,7 @@ namespace Sample.DotNetFramework.MVC6
         public Startup(IHostingEnvironment env)
         {
             Configuration = ConfigurationManager.Configure(env.ContentRootPath);
+            new ServiceResolver("Sample.DotNetFramework.Common", "Sample.DotNetFramework.Common.DTO", "Model").LoadModels();
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -25,16 +28,21 @@ namespace Sample.DotNetFramework.MVC6
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            
+            services.AddScoped<IDataBaseContext, SampleDbContext>();
 
-            services.AddDbContext<SampleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            // Service de gestion des exceptions
+            // Exception handler service
             services.AddScoped<ExceptionHandlerAttribute>();
-
+            // CorrelationId manager service
             services.AddScoped<CorrelationIdAttribute>();
 
-            // Services de l'application
+            // Application services
             ConfigureAppServices.Configure(ref services);
+
+            // Configuration service
+            services.AddSingleton(typeof(IConfigurationRoot), imp => Configuration);
+
+            ServicesProvider.Services = services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +75,11 @@ namespace Sample.DotNetFramework.MVC6
                     name: "default",
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" });
+
+                routes.MapRoute(
+                    name: "Generic API",
+                    template: "{model}/{action}/{id?}",
+                    defaults: new { controller = "Generic" });
             });
         }
     }
