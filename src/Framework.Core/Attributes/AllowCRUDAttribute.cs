@@ -1,28 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Framework.Core.Controller;
+using Framework.Core.Service;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Framework.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class AllowCRUDAttribute : Attribute
+    internal class AllowCRUDAttribute : ActionFilterAttribute, IActionFilter
     {
-        public readonly List<string> CrudOperationsAllowed;
-
-        /// <param name="crudOperationsAllowed">Can be CRUD, DURC, CU, DC, crud, etc</param>
-        public AllowCRUDAttribute(string crudOperationsAllowed)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
-            CrudOperationsAllowed = new List<string>();
-            foreach (var crudOperation in crudOperationsAllowed.ToArray())
-            {
-                var operation = char.ToLowerInvariant(crudOperation);
+            var modelName = context.ActionArguments.Single(arg => arg.Key == "model").Value.ToString();
+            var crudOperationAllowed = ServiceResolver.GetModelType(modelName).GetTypeInfo().GetCustomAttribute<CrudOperationAttribute>();
 
-                if (operation == char.ToLowerInvariant('C')
-                    || operation == char.ToLowerInvariant('R')
-                    || operation == char.ToLowerInvariant('U')
-                    || operation == char.ToLowerInvariant('D'))
+            if (crudOperationAllowed != null && !string.IsNullOrEmpty(crudOperationAllowed.crudOperationsAllowed))
+            {
+                switch (context.RouteData.Values.Single(route => route.Key == "action").Value.ToString())
                 {
-                    CrudOperationsAllowed.Add(crudOperation.ToString());
+                    case nameof(GenericController.Add):
+                        if (!crudOperationAllowed.crudOperationsAllowed.Contains("C"))
+                            context.Result = new UnauthorizedResult();
+                        break;
+                    case nameof(GenericController.Delete):
+                        if (!crudOperationAllowed.crudOperationsAllowed.Contains("D"))
+                            context.Result = new UnauthorizedResult();
+                        break;
+                    case nameof(GenericController.Get):
+                    case nameof(GenericController.GetAll):
+                        if (!crudOperationAllowed.crudOperationsAllowed.Contains("R"))
+                            context.Result = new UnauthorizedResult();
+                        break;
+                    case nameof(GenericController.Update):
+                        if (!crudOperationAllowed.crudOperationsAllowed.Contains("U"))
+                            context.Result = new UnauthorizedResult();
+                        break;
+                    default:
+                        break;
                 }
             }
         }

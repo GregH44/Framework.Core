@@ -1,4 +1,5 @@
-﻿using Framework.Core.Enums;
+﻿using Framework.Core.Attributes;
+using Framework.Core.Enums;
 using Framework.Core.Models;
 using Framework.Core.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using System.Linq;
 
 namespace Framework.Core.Controller
 {
+    [AllowCRUD]
     public class GenericController : ControllerBase
     {
         public GenericController(ILogger<GenericController> logger)
@@ -58,7 +60,7 @@ namespace Framework.Core.Controller
             return response;
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public IActionResult Delete([FromRoute] string model, long id)
         {
             ServiceCaller.Call(GlobalEnums.Api.Delete, model, id);

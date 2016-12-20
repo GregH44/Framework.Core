@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Framework.Core.Attributes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sample.DotNetFramework.Common.DTO
 {
+    [CrudOperation("CUD")]
     [Table("User")]
     public class UserModel
     {
