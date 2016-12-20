@@ -1,24 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Framework.Core.Models
 {
     public class ExceptionModel
     {
-        public string[] ErrorsMessage { get; set; }
+        public List<string> ErrorsMessage { get; set; }
 
         public void AddErrorMessage(string errorMessage)
         {
-            List<string> errorsMessage = null;
-
             if (ErrorsMessage == null)
-                errorsMessage = new List<string>();
-            else
-                errorsMessage = ErrorsMessage.ToList();
+                ErrorsMessage = new List<string>();
 
-            errorsMessage.Add(errorMessage);
-
-            ErrorsMessage = errorsMessage.ToArray();
+            ErrorsMessage.Add(errorMessage);
         }
     }
 }

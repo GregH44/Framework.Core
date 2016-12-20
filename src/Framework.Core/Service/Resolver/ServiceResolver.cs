@@ -13,8 +13,7 @@ namespace Framework.Core.Service
         private static ConcurrentDictionary<string, Type> modelsTypeDictionary = null;
         private static IEnumerable<Type> modelsTypeInTheNamespace = null;
         private static string suffix = null;
-
-        //IList<>
+        
         private string assemblyModels = null;
         private string namespaceModels = null;
 
@@ -25,7 +24,6 @@ namespace Framework.Core.Service
 
         public ServiceResolver(string assemblyModels, string namespaceModels, string modelSuffix)
         {
-            // Assembly Sample.DotNetFramework.Common
             this.assemblyModels = assemblyModels;
             this.namespaceModels = namespaceModels;
             suffix = modelSuffix;

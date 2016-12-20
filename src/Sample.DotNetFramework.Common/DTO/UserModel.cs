@@ -11,7 +11,6 @@ namespace Sample.DotNetFramework.Common.DTO
         public int UserId { get; set; }
 
         [Column("FirstName")]
-        [StringLength(1)]
         public string FirstName { get; set; }
 
         [Column("LastName")]

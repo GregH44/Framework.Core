@@ -4,9 +4,7 @@ using Framework.Core.Enums;
 using Framework.Core.Exceptions;
 using Framework.Core.Tools;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Framework.Core.DAL.Repository
