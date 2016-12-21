@@ -8,6 +8,7 @@ namespace Sample.DotNetFramework.DataLayer.Infrastructure
         public static void Configure(ref ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserModel>();
+            modelBuilder.Entity<SampleModel>();
         }
     }
 }

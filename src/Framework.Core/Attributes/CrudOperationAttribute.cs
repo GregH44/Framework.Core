@@ -2,7 +2,7 @@
 
 namespace Framework.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class CrudOperationAttribute : Attribute
     {
         public readonly string crudOperationsAllowed = string.Empty;

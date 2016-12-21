@@ -110,7 +110,7 @@ namespace Framework.Core.Tools
             string query = "Where ";
             var entityType = typeof(TEntity);
 
-            var propertiesKey = entityType.GetProperties().ToList().Where(prop => prop.GetCustomAttributes<KeyAttribute>().Any());
+            var propertiesKey = entityType.GetProperties().Where(prop => prop.GetCustomAttributes<KeyAttribute>().Any());
 
             if (propertiesKey.Count() > 1)
                 throw new InvalidOperationException("The input sequence contains more than one element.");

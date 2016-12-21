@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Framework.Core.DAL.Infrastructure;
 using System.Reflection;
 using Framework.Core.DAL.Repository;
+using Framework.Core.Exceptions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Framework.Core.Service
 {
@@ -26,6 +28,54 @@ namespace Framework.Core.Service
 
         public GenericService(IDataBaseContext context) : base(context)
         {
+        }
+
+        public override void Add(TDataModel entity)
+        {
+            try
+            {
+                var property = typeof(TDataModel).GetProperties().SingleOrDefault(prop => prop.GetCustomAttributes<KeyAttribute>().Any());
+                
+                if (property != null)
+                    property.SetValue(entity, Activator.CreateInstance(property.PropertyType));
+
+                Repository.Add(entity);
+                Save();
+            }
+            catch (GenericRepositoryException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceLayerException("An error occured while inserting entity !", ex);
+            }
+        }
+
+        public override void Add(IEnumerable<TDataModel> entities)
+        {
+            try
+            {
+                var property = typeof(TDataModel).GetProperties().SingleOrDefault(prop => prop.GetCustomAttributes<KeyAttribute>().Any());
+
+                foreach (var entity in entities)
+                {
+                    if (property != null)
+                        property.SetValue(entity, Activator.CreateInstance(property.PropertyType));
+
+                    Repository.Add(entity);
+                }
+                
+                Save();
+            }
+            catch (GenericRepositoryException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceLayerException("An error occured while inserting entity !", ex);
+            }
         }
 
         public override void AddOrUpdate(IEnumerable<TDataModel> entities)

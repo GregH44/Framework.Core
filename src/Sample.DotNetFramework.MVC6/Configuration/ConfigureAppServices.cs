@@ -16,7 +16,7 @@ namespace Sample.DotNetFramework.MVC6.Configuration
         internal static void Configure(ref IServiceCollection services)
         {
             services.AddScoped<GenericService<UserModel>, GenericService<UserModel>>();
-            services.AddScoped<IServiceBase<UserModel>, GenericService<UserModel>>();
+            //services.AddScoped<GenericService<SampleModel>, GenericService<SampleModel>>();
         }
     }
 }

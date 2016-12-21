@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Framework.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     internal class AllowCRUDAttribute : ActionFilterAttribute, IActionFilter
     {
         public override void OnActionExecuting(ActionExecutingContext context)

@@ -1,7 +1,8 @@
-﻿using Framework.Core.Attributes;
+﻿using Framework.Core;
+using Framework.Core.Attributes;
 using Framework.Core.Configuration;
 using Framework.Core.DAL.Infrastructure;
-using Framework.Core.Service;
+using Framework.Core.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sample.DotNetFramework.DataLayer.Infrastructure;
 using Sample.DotNetFramework.MVC6.Configuration;
+using System;
 using System.IO;
 
 namespace Sample.DotNetFramework.MVC6
@@ -19,7 +21,6 @@ namespace Sample.DotNetFramework.MVC6
         public Startup(IHostingEnvironment env)
         {
             Configuration = ConfigurationManager.Configure(env.ContentRootPath);
-            new ServiceResolver("Sample.DotNetFramework.Common", "Sample.DotNetFramework.Common.DTO", "Model").LoadModels();
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -42,7 +43,7 @@ namespace Sample.DotNetFramework.MVC6
             // Configuration service
             services.AddSingleton(typeof(IConfigurationRoot), imp => Configuration);
 
-            ServicesProvider.Services = services.BuildServiceProvider();
+            FrameworkManager.InitializeGenericApi(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,10 +77,7 @@ namespace Sample.DotNetFramework.MVC6
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" });
 
-                routes.MapRoute(
-                    name: "Generic API",
-                    template: "{model}/{action}/{id?}",
-                    defaults: new { controller = "Generic" });
+                routes.MapGenericRoute();
             });
         }
     }

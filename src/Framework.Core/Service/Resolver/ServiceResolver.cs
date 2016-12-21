@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Framework.Core.Service
 {
-    public class ServiceResolver
+    internal class ServiceResolver
     {
         private static Type genericServiceType = null;
         private static ConcurrentDictionary<string, Type> modelsTypeDictionary = null;
@@ -17,12 +17,12 @@ namespace Framework.Core.Service
         private string assemblyModels = null;
         private string namespaceModels = null;
 
-        public ServiceResolver(string assemblyModels, string namespaceModels)
+        internal ServiceResolver(string assemblyModels, string namespaceModels)
             : this(assemblyModels, namespaceModels, string.Empty)
         {
         }
 
-        public ServiceResolver(string assemblyModels, string namespaceModels, string modelSuffix)
+        internal ServiceResolver(string assemblyModels, string namespaceModels, string modelSuffix)
         {
             this.assemblyModels = assemblyModels;
             this.namespaceModels = namespaceModels;
@@ -30,8 +30,11 @@ namespace Framework.Core.Service
             modelsTypeDictionary = new ConcurrentDictionary<string, Type>();
         }
 
-        public void LoadModels()
+        internal void LoadModels()
         {
+            if (string.IsNullOrEmpty(assemblyModels))
+                throw new Exception($"Assembly is not configure for models. Please check initialization from \"FrameworkManager\" in your startup class.");
+
             var assembly = Assembly.Load(new AssemblyName(assemblyModels));
 
             if (assembly == null)

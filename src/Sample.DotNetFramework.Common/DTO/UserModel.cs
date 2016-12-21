@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sample.DotNetFramework.Common.DTO
 {
-    [CrudOperation("CUD")]
+    [CrudOperation("CRUD")]
     [Table("User")]
     public class UserModel
     {
