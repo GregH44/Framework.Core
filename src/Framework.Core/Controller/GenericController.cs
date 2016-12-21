@@ -13,6 +13,7 @@ using System.Linq;
 namespace Framework.Core.Controller
 {
     [AllowCRUD]
+    [Route("api/{model}/{id?}")]
     public class GenericController : ControllerBase
     {
         public GenericController(ILogger<GenericController> logger)

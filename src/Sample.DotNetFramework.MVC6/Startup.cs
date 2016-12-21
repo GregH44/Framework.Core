@@ -76,8 +76,6 @@ namespace Sample.DotNetFramework.MVC6
                     name: "default",
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" });
-
-                routes.MapGenericRoute();
             });
         }
     }
