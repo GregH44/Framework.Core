@@ -70,13 +70,7 @@ namespace Framework.Core.Controller
         }
 
         [HttpGet]
-        public IActionResult GetAll([FromRoute] string model)
-        {
-            return Json(ServiceCaller.Call(GlobalEnums.Api.GetList, model));
-        }
-
-        [HttpGet]
-        public IActionResult Get([FromRoute] string model, long id)
+        public IActionResult Get([FromRoute] string model, long? id)
         {
             return Json(ServiceCaller.Call(GlobalEnums.Api.Get, model, id));
         }

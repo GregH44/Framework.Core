@@ -10,10 +10,10 @@ namespace Framework.Core.Service
     public abstract class ServiceBase<TDataModel> : IServiceBase<TDataModel>
         where TDataModel : class
     {
-        protected IDataBaseContext context = null;
+        protected DataBaseContext context = null;
         protected IGenericRepository<TDataModel> repository = null;
 
-        public IDataBaseContext Context
+        public DataBaseContext Context
         {
             get
             {
@@ -34,7 +34,7 @@ namespace Framework.Core.Service
             }
         }
 
-        public ServiceBase(IDataBaseContext context)
+        public ServiceBase(DataBaseContext context)
         {
             this.context = context;
         }

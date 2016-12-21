@@ -2,16 +2,17 @@
 using Framework.Core.Attributes;
 using Framework.Core.Configuration;
 using Framework.Core.DAL.Infrastructure;
-using Framework.Core.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Internal;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sample.DotNetFramework.DataLayer.Infrastructure;
 using Sample.DotNetFramework.MVC6.Configuration;
-using System;
 using System.IO;
 
 namespace Sample.DotNetFramework.MVC6
@@ -29,8 +30,21 @@ namespace Sample.DotNetFramework.MVC6
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            
-            services.AddScoped<IDataBaseContext, SampleDbContext>();
+
+            services.AddDbContext<DataBaseContext>(optionsAction =>
+            {
+                optionsAction.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
+
+                var coreConventionSetBuilder = new CoreConventionSetBuilder();
+                var sqlConventionSetBuilder = new SqlServerConventionSetBuilder(new SqlServerTypeMapper(), null, null);
+                var conventionSet = sqlConventionSetBuilder.AddConventions(coreConventionSetBuilder.CreateConventionSet());
+
+                var modelBuilder = new GenericModelBuilder(conventionSet, Configuration);
+                modelBuilder.InitializeDataModels();
+                optionsAction.UseModel(modelBuilder.Model);
+            });
+
+            //services.AddScoped<IDataBaseContext, SampleDbContext>();
 
             // Exception handler service
             services.AddScoped<ExceptionHandlerAttribute>();

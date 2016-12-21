@@ -13,7 +13,7 @@ namespace Framework.Core.Service
         internal static object Call(GlobalEnums.Api methodName, string modelName)
             => Call(methodName, modelName, null, null);
 
-        internal static object Call(GlobalEnums.Api methodName, string modelName, long id)
+        internal static object Call(GlobalEnums.Api methodName, string modelName, long? id)
             => Call(methodName, modelName, id, null);
 
         internal static object Call(GlobalEnums.Api methodName, string modelName, object values)
@@ -35,11 +35,10 @@ namespace Framework.Core.Service
                     result = InvokeMethod(service, GlobalEnums.Api.Delete, new object[] { id.Value });
                     break;
                 case GlobalEnums.Api.Get:
-                    if (!id.HasValue) throw new ArgumentNullException($"'{nameof(id)}' cannot be null for {GlobalEnums.Api.Get.ToString()} operation.");
-                    result = InvokeMethod(service, GlobalEnums.Api.Get, new object[] { id.Value });
-                    break;
-                case GlobalEnums.Api.GetList:
-                    result = InvokeMethod(service, GlobalEnums.Api.GetList);
+                    if (id.HasValue)
+                        result = InvokeMethod(service, GlobalEnums.Api.Get, new object[] { id.Value });
+                    else
+                        result = InvokeMethod(service, GlobalEnums.Api.GetList);
                     break;
                 case GlobalEnums.Api.Update:
                     if (values == null) throw new ArgumentNullException($"'{nameof(values)}' cannot be null for {GlobalEnums.Api.Update.ToString()} operation.");

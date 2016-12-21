@@ -29,7 +29,6 @@ namespace Framework.Core.Attributes
                             context.Result = new UnauthorizedResult();
                         break;
                     case nameof(GenericController.Get):
-                    case nameof(GenericController.GetAll):
                         if (!crudOperationAllowed.crudOperationsAllowed.Contains("R"))
                             context.Result = new UnauthorizedResult();
                         break;

@@ -26,7 +26,7 @@ namespace Framework.Core.Service
             }
         }
 
-        public GenericService(IDataBaseContext context) : base(context)
+        public GenericService(DataBaseContext context) : base(context)
         {
         }
 

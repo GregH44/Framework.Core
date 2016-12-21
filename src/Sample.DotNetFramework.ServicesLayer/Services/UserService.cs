@@ -1,7 +1,7 @@
-﻿using Framework.Core.Exceptions;
+﻿using Framework.Core.DAL.Infrastructure;
+using Framework.Core.Exceptions;
 using Framework.Core.Service;
 using Sample.DotNetFramework.Common.DTO;
-using Sample.DotNetFramework.DataLayer.Infrastructure;
 using Sample.DotNetFramework.ServicesLayer.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Sample.DotNetFramework.ServicesLayer.Services
 {
     public sealed class UserService : ServiceBase<UserModel>, IUserService
     {
-        public UserService(SampleDbContext context) : base(context)
+        public UserService(DataBaseContext context) : base(context)
         {
         }
 

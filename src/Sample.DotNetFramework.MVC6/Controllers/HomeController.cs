@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Microsoft.Extensions.DependencyInjection;
-using Sample.DotNetFramework.DataLayer.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Sample.DotNetFramework.MVC6.Controllers
 {

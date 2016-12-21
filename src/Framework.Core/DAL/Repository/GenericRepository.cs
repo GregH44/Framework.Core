@@ -12,10 +12,10 @@ namespace Framework.Core.DAL.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class
     {
-        protected IDataBaseContext context = null;
+        protected DataBaseContext context = null;
         protected DbSet<TEntity> dbSet = null;
 
-        public GenericRepository(IDataBaseContext context)
+        public GenericRepository(DataBaseContext context)
         {
             this.context = context;
             dbSet = context.Set<TEntity>();
