@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Internal;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
@@ -7,17 +10,22 @@ using System.Reflection;
 
 namespace Framework.Core.DAL.Infrastructure
 {
-    public class GenericModelBuilder : ModelBuilder
+    public class GenericModelBuilder
     {
+        private readonly ModelBuilder modelBuilder = null;
         private readonly IConfigurationRoot configuration = null;
 
-        public GenericModelBuilder(ConventionSet conventions, IConfigurationRoot configuration)
-            : base(conventions)
+        public GenericModelBuilder(IConfigurationRoot configuration)
         {
+            var coreConventionSetBuilder = new CoreConventionSetBuilder();
+            var sqlConventionSetBuilder = new SqlServerConventionSetBuilder(new SqlServerTypeMapper(), null, null);
+            var conventionSet = sqlConventionSetBuilder.AddConventions(coreConventionSetBuilder.CreateConventionSet());
+            modelBuilder = new ModelBuilder(conventionSet);
+
             this.configuration = configuration;
         }
 
-        public void InitializeDataModels()
+        public virtual IModel InitializeDataModels()
         {
             var assemblyModelsName = configuration["Framework:Configuration:Models:Assembly"];
             var namespaceModels = configuration["Framework:Configuration:Models:NamespaceModels"];
@@ -31,11 +39,13 @@ namespace Framework.Core.DAL.Infrastructure
                 throw new Exception($"Assembly {assemblyModelsName} not found !");
 
             var modelsTypeInTheNamespace = assembly.ExportedTypes.Where(mod => mod.Namespace.StartsWith(namespaceModels)).OrderBy(o => o.Name);
-            
+
             foreach (var modelType in modelsTypeInTheNamespace)
             {
-                Entity(modelType);
+                modelBuilder.Entity(modelType);
             }
+
+            return modelBuilder.Model;
         }
     }
 }

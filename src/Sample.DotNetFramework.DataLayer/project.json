@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Framework.Core": "1.0.0",
-    "NETStandard.Library": "1.6.0",
+    "NETStandard.Library": "1.6.1",
     "Sample.DotNetFramework.Common": "1.0.0"
   },
 

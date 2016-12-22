@@ -1,19 +1,17 @@
 ﻿using Framework.Core;
 using Framework.Core.Attributes;
 using Framework.Core.Configuration;
+using Framework.Core.Extensions;
 using Framework.Core.DAL.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions.Internal;
-using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Sample.DotNetFramework.MVC6.Configuration;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sample.DotNetFramework.MVC6
 {
@@ -31,20 +29,11 @@ namespace Sample.DotNetFramework.MVC6
         {
             services.AddMvc();
 
-            services.AddDbContext<DataBaseContext>(optionsAction =>
-            {
-                optionsAction.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
-
-                var coreConventionSetBuilder = new CoreConventionSetBuilder();
-                var sqlConventionSetBuilder = new SqlServerConventionSetBuilder(new SqlServerTypeMapper(), null, null);
-                var conventionSet = sqlConventionSetBuilder.AddConventions(coreConventionSetBuilder.CreateConventionSet());
-
-                var modelBuilder = new GenericModelBuilder(conventionSet, Configuration);
-                modelBuilder.InitializeDataModels();
-                optionsAction.UseModel(modelBuilder.Model);
-            });
-
-            //services.AddScoped<IDataBaseContext, SampleDbContext>();
+            var model = new GenericModelBuilder(Configuration).InitializeDataModels();
+            services.AddDbContext(
+                Configuration["ConnectionStrings:DefaultConnection"],
+                GetType().Namespace,
+                model);
 
             // Exception handler service
             services.AddScoped<ExceptionHandlerAttribute>();
@@ -91,6 +80,11 @@ namespace Sample.DotNetFramework.MVC6
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
+            using (var context = app.ApplicationServices.GetService<DataBaseContext>())
+            {
+                context.Database.Migrate();
+            }
         }
     }
 }

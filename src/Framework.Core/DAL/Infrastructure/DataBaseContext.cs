@@ -2,20 +2,10 @@
 
 namespace Framework.Core.DAL.Infrastructure
 {
-    public class DataBaseContext : DbContext, IDataBaseContext
+    public class DataBaseContext : DbContext
     {
-        public DataBaseContext()
-            : base()
-        {
-        }
-
-        public DataBaseContext(DbContextOptions<DataBaseContext> options)
+        public DataBaseContext(DbContextOptions options)
             : base(options)
-        {
-        }
-
-        public DataBaseContext(object options)
-            : base((DbContextOptions)options)
         {
         }
     }
