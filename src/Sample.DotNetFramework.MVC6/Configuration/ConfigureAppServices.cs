@@ -22,7 +22,7 @@ namespace Sample.DotNetFramework.MVC6.Configuration
             //services.AddScoped<GenericService<SampleModel>, GenericService<SampleModel>>();
 
             // A utiliser lorsqu'on gère soit même les services (en dehors du framework generic)
-            services.AddScoped<IUserService, UserService>();
+            //services.AddScoped<IUserService, UserService>();
         }
     }
 }

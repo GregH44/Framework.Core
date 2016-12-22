@@ -46,7 +46,7 @@ namespace Sample.DotNetFramework.MVC6
             // Configuration service
             services.AddSingleton(typeof(IConfigurationRoot), imp => Configuration);
 
-            FrameworkManager.InitializeGenericApi(services);
+            FrameworkManager.Initialize(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

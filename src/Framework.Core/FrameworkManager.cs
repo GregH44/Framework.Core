@@ -16,33 +16,67 @@ namespace Framework.Core
         private static Type genericServiceType = null;
         private static IEnumerable<Type> modelTypesInTheNamespace = null;
 
-        public static void InitializeGenericApi(IServiceCollection services)
+        public static void Initialize(IServiceCollection services, bool useGenericApi = false)
         {
             genericServiceType = Assembly.Load(new AssemblyName("Framework.Core")).ExportedTypes.Single(type => type.Name.StartsWith("GenericService"));
             LoadModelTypes();
 
             InitializeServiceResolver();
-            DeclareApiServicesAsScoped(services);
 
-            ServicesProvider.Services = services.BuildServiceProvider();
-        }
-
-        private static void DeclareApiServicesAsScoped(IServiceCollection services)
-        {
-            var addScopedGenericMethod = 
+            var addScopedGenericMethod =
                 typeof(ServiceCollectionServiceExtensions)
                 .GetMethods()
                 .Where(method => method.Name == "AddScoped" && method.GetGenericArguments().Length == 2 && method.GetParameters().Count() == 1)
                 .Single();
 
-            if (addScopedGenericMethod == null)
-                throw new Exception("The AddScoped method doesn't exists !");
+            DeclareApiServicesAsScoped(services, addScopedGenericMethod, useGenericApi);
+            DeclareServicesAsScoped(services, addScopedGenericMethod);
+
+            ServicesProvider.Services = services.BuildServiceProvider();
+        }
+
+        private static void DeclareApiServicesAsScoped(IServiceCollection services, MethodInfo addScopedGenericMethod, bool useGenericApi)
+        {
+            if (!useGenericApi)
+                return;
 
             foreach (var modelType in modelTypesInTheNamespace)
             {
                 var genericServiceForDataModel = genericServiceType.MakeGenericType(modelType);
                 var addScopedMethod = addScopedGenericMethod.MakeGenericMethod(genericServiceForDataModel, genericServiceForDataModel);
                 addScopedMethod.Invoke(services, new object[] { services });
+            }
+        }
+
+        private static void DeclareServicesAsScoped(IServiceCollection services, MethodInfo addScopedGenericMethod)
+        {
+            var servicesLayerAssemblyName = configuration["Framework:Configuration:Services:Assembly"];
+            if (string.IsNullOrEmpty(servicesLayerAssemblyName))
+                return;
+
+            var modelSuffix = configuration["Framework:Configuration:Models:ModelSuffix"];
+
+            var servicesInterfaces = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsInterface);
+            var servicesClasses = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsClass);
+
+            foreach (var modelType in modelTypesInTheNamespace)
+            {
+                var modelName = modelType.Name;
+
+                if (!string.IsNullOrEmpty(modelSuffix) && modelType.Name.EndsWith(modelSuffix))
+                {
+                    var indexSuffix = modelType.Name.IndexOf(modelSuffix);
+                    modelName = modelType.Name.Remove(indexSuffix);
+                }
+
+                var serviceInterface = servicesInterfaces.SingleOrDefault(svc => svc.Name == $"I{modelName}Service");
+                var serviceClass = servicesClasses.SingleOrDefault(svc => svc.Name == $"{modelName}Service");
+
+                if (serviceInterface != null && serviceClass != null)
+                {
+                    var addScopedMethod = addScopedGenericMethod.MakeGenericMethod(serviceInterface, serviceClass);
+                    addScopedMethod.Invoke(services, new object[] { services });
+                }
             }
         }
 
