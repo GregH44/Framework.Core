@@ -18,8 +18,8 @@ namespace Sample.DotNetFramework.MVC6.Configuration
         internal static void Configure(ref IServiceCollection services)
         {
             // A utiliser pour le framework generic
-            services.AddScoped<GenericService<UserModel>, GenericService<UserModel>>();
-            services.AddScoped<GenericService<SampleModel>, GenericService<SampleModel>>();
+            //services.AddScoped<GenericService<UserModel>, GenericService<UserModel>>();
+            //services.AddScoped<GenericService<SampleModel>, GenericService<SampleModel>>();
 
             // A utiliser lorsqu'on gère soit même les services (en dehors du framework generic)
             services.AddScoped<IUserService, UserService>();
