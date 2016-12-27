@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Sample.DotNetFramework.MVC6.Configuration;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +29,7 @@ namespace Sample.DotNetFramework.MVC6
             services.AddMvc();
 
             var model = new GenericModelBuilder(Configuration).InitializeDataModels();
-            services.AddDbContext(
+            services.AddDbContext<DataBaseContext>(
                 Configuration["ConnectionStrings:DefaultConnection"],
                 GetType().Namespace,
                 model);
@@ -40,13 +39,10 @@ namespace Sample.DotNetFramework.MVC6
             // CorrelationId manager service
             services.AddScoped<CorrelationIdAttribute>();
 
-            // Application services
-            ConfigureAppServices.Configure(ref services);
-
             // Configuration service
             services.AddSingleton(typeof(IConfigurationRoot), imp => Configuration);
 
-            FrameworkManager.Initialize(services);
+            FrameworkManager.Initialize(services, true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
