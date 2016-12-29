@@ -15,3 +15,14 @@
 /src/Sample.DotNetFramework.ServicesLayer/obj/Debug/netstandard1.6
 *.user
 /src/Sample.DotNetFramework.MVC6/appsettings.LFR008523.json
+/src/Framework.Core/bin/Release/netstandard1.6
+/src/Framework.Core/obj/Release/netstandard1.6
+/src/Sample.DotNetFramework.Common/bin/Release/netstandard1.6
+/src/Sample.DotNetFramework.Common/obj/Release/netstandard1.6
+/src/Sample.DotNetFramework.DataLayer/bin/Release/netstandard1.6
+/src/Sample.DotNetFramework.DataLayer/obj/Release/netstandard1.6
+/src/Sample.DotNetFramework.MVC6/bin/Release
+/src/Sample.DotNetFramework.MVC6/obj/Release/netcoreapp1.0
+/src/Sample.DotNetFramework.MVC6/Properties/PublishProfiles
+/src/Sample.DotNetFramework.ServicesLayer/bin/Release/netstandard1.6
+/src/Sample.DotNetFramework.ServicesLayer/obj/Release/netstandard1.6

@@ -1,4 +1,5 @@
 ﻿using Framework.Core.Attributes;
+using Framework.Core.DAL.Infrastructure;
 using Framework.Core.Enums;
 using Framework.Core.Models;
 using Framework.Core.Service;
@@ -16,9 +17,12 @@ namespace Framework.Core.Controller
     [Route("api/{model}/{id?}")]
     public class GenericController : ControllerBase
     {
-        public GenericController(ILogger<GenericController> logger)
+        private readonly DataBaseContext context = null;
+
+        public GenericController(ILogger<GenericController> logger, DataBaseContext context)
             : base(logger)
         {
+            this.context = context;
         }
 
         [HttpPost]
@@ -34,7 +38,7 @@ namespace Framework.Core.Controller
             }
             else
             {
-                ServiceCaller.Call(GlobalEnums.Api.Add, model, values);
+                ServiceCaller.Call(context, GlobalEnums.Api.Add, model, values);
                 response = Ok();
             }
 
@@ -54,7 +58,7 @@ namespace Framework.Core.Controller
             }
             else
             {
-                ServiceCaller.Call(GlobalEnums.Api.Update, model, values);
+                ServiceCaller.Call(context, GlobalEnums.Api.Update, model, values);
                 response = Ok();
             }
 
@@ -64,7 +68,7 @@ namespace Framework.Core.Controller
         [HttpDelete]
         public IActionResult Delete([FromRoute] string model, long id)
         {
-            ServiceCaller.Call(GlobalEnums.Api.Delete, model, id);
+            ServiceCaller.Call(context, GlobalEnums.Api.Delete, model, id);
 
             return Ok();
         }
@@ -72,7 +76,7 @@ namespace Framework.Core.Controller
         [HttpGet]
         public IActionResult Get([FromRoute] string model, long? id)
         {
-            return Json(ServiceCaller.Call(GlobalEnums.Api.Get, model, id));
+            return Json(ServiceCaller.Call(context, GlobalEnums.Api.Get, model, id));
         }
 
         private object GetObjectsFromJson(string model, string content)

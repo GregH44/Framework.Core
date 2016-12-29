@@ -16,7 +16,7 @@ namespace Framework.Core
         private static Type genericServiceType = null;
         private static IEnumerable<Type> modelTypesInTheNamespace = null;
 
-        public static void Initialize(IServiceCollection services, bool useGenericApi = false)
+        public static void Initialize(IServiceCollection services)
         {
             genericServiceType = Assembly.Load(new AssemblyName("Framework.Core")).ExportedTypes.Single(type => type.Name.StartsWith("GenericService"));
             LoadModelTypes();
@@ -29,15 +29,15 @@ namespace Framework.Core
                 .Where(method => method.Name == "AddScoped" && method.GetGenericArguments().Length == 2 && method.GetParameters().Count() == 1)
                 .Single();
 
-            DeclareApiServicesAsScoped(services, addScopedGenericMethod, useGenericApi);
+            DeclareApiServicesAsScoped(services, addScopedGenericMethod);
             DeclareServicesAsScoped(services, addScopedGenericMethod);
-
-            ServicesProvider.Services = services.BuildServiceProvider();
         }
 
-        private static void DeclareApiServicesAsScoped(IServiceCollection services, MethodInfo addScopedGenericMethod, bool useGenericApi)
+        private static void DeclareApiServicesAsScoped(IServiceCollection services, MethodInfo addScopedGenericMethod)
         {
-            if (!useGenericApi)
+            var useGenericApi = false;
+
+            if (!bool.TryParse(configuration["Framework:Configuration:UseGenericApi"], out useGenericApi) && !useGenericApi)
                 return;
 
             foreach (var modelType in modelTypesInTheNamespace)

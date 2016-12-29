@@ -1,4 +1,5 @@
 ﻿using Framework.Core.Configuration;
+using Framework.Core.DAL.Infrastructure;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -22,12 +23,12 @@ namespace Framework.Core.Service
             modelsTypeDictionary = new ConcurrentDictionary<string, Type>();
         }
 
-        internal static object GetService(string modelName)
+        internal static object GetService(DataBaseContext dbContext, string modelName)
         {
             var modelType = GetTypeFromModelName(modelName);
             var genericService = genericServiceType.MakeGenericType(modelType);
 
-            return ServicesProvider.Services.GetService(genericService);
+            return Activator.CreateInstance(genericService, dbContext);
         }
 
         internal static Type GetModelType(string modelName)

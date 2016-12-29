@@ -12,10 +12,14 @@ namespace Sample.DotNetFramework.MVC6
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
-                .UseKestrel()
+                .UseKestrel(options =>
+                {
+                    options.ThreadCount = Environment.ProcessorCount;
+                })
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .UseUrls("http://*:5000")
                 .Build();
 
             host.Run();

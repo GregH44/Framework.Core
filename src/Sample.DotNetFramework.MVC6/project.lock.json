@@ -1650,26 +1650,6 @@
           "lib/netstandard1.3/Microsoft.VisualBasic.dll": {}
         }
       },
-      "Microsoft.VisualStudio.Web.BrowserLink.Loader/14.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
-          "Microsoft.Extensions.FileProviders.Physical": "1.0.0",
-          "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
-          "Microsoft.Win32.Registry": "4.0.0",
-          "System.Collections": "4.0.11",
-          "System.Net.Sockets": "4.1.0",
-          "System.Runtime.Loader": "4.0.0",
-          "System.Text.Encoding": "4.0.11",
-          "System.Threading": "4.0.11"
-        },
-        "compile": {
-          "lib/netstandard1.5/Microsoft.VisualStudio.Web.BrowserLink.Loader.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard1.5/Microsoft.VisualStudio.Web.BrowserLink.Loader.dll": {}
-        }
-      },
       "Microsoft.Win32.Primitives/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -5833,19 +5813,6 @@
         "ref/portable-net45+win8+wpa81/_._",
         "ref/win8/_._",
         "ref/wpa81/_._"
-      ]
-    },
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader/14.1.0": {
-      "sha512": "iVJCfMpPqZE2QaEAGT5MoEYM65l59rDSNERnZQmJDOiE+itZZ6ZP5wh+Lh9Lv0Nt1SbgvXdN3z39MM435ITldA==",
-      "type": "package",
-      "path": "Microsoft.VisualStudio.Web.BrowserLink.Loader/14.1.0",
-      "files": [
-        "lib/net451/Microsoft.VisualStudio.Web.BrowserLink.Loader.dll",
-        "lib/net451/Microsoft.VisualStudio.Web.BrowserLink.Loader.xml",
-        "lib/netstandard1.5/Microsoft.VisualStudio.Web.BrowserLink.Loader.dll",
-        "lib/netstandard1.5/Microsoft.VisualStudio.Web.BrowserLink.Loader.xml",
-        "microsoft.visualstudio.web.browserlink.loader.14.1.0.nupkg.sha512",
-        "microsoft.visualstudio.web.browserlink.loader.nuspec"
       ]
     },
     "Microsoft.Win32.Primitives/4.3.0": {
@@ -11233,7 +11200,6 @@
       "Microsoft.Extensions.Logging.Debug >= 1.1.0",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.1.0",
       "Microsoft.NETCore.App >= 1.1.0",
-      "Microsoft.VisualStudio.Web.BrowserLink.Loader >= 14.1.0",
       "Sample.DotNetFramework.Common >= 1.0.0-*",
       "Sample.DotNetFramework.ServicesLayer >= 1.0.0-*",
       "Serilog.Extensions.Logging.File >= 1.0.0",

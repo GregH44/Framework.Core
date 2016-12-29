@@ -39,23 +39,20 @@ namespace Sample.DotNetFramework.MVC6
             // CorrelationId manager service
             services.AddScoped<CorrelationIdAttribute>();
 
-            // Configuration service
-            services.AddSingleton(typeof(IConfigurationRoot), imp => Configuration);
-
-            FrameworkManager.Initialize(services, true);
+            FrameworkManager.Initialize(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddFile(string.Format("{0}-{1}.txt", Path.Combine(env.WebRootPath, env.ApplicationName), "{Date}"));
+            loggerFactory.AddFile(string.Format("{0}-{1}.txt", Path.Combine(env.WebRootPath, env.ApplicationName), "{Date}"), LogLevel.Warning);
 
             if (env.IsDevelopment())
             {
                 loggerFactory.AddDebug();
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
             }
             else
             {
@@ -77,6 +74,8 @@ namespace Sample.DotNetFramework.MVC6
                     defaults: new { controller = "Home", action = "Index" });
             });
 
+            /* If you want to use EF code first on startup, add the code below
+             */
             using (var context = app.ApplicationServices.GetService<DataBaseContext>())
             {
                 context.Database.Migrate();

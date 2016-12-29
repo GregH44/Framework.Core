@@ -1,4 +1,5 @@
 ﻿using Framework.Core.Constants;
+using Framework.Core.DAL.Infrastructure;
 using Framework.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,18 @@ namespace Framework.Core.Service
 {
     internal static class ServiceCaller
     {
-        internal static object Call(GlobalEnums.Api methodName, string modelName)
-            => Call(methodName, modelName, null, null);
+        internal static object Call(DataBaseContext dbContext, GlobalEnums.Api methodName, string modelName)
+            => Call(dbContext, methodName, modelName, null, null);
 
-        internal static object Call(GlobalEnums.Api methodName, string modelName, long? id)
-            => Call(methodName, modelName, id, null);
+        internal static object Call(DataBaseContext dbContext, GlobalEnums.Api methodName, string modelName, long? id)
+            => Call(dbContext, methodName, modelName, id, null);
 
-        internal static object Call(GlobalEnums.Api methodName, string modelName, object values)
-            => Call(methodName, modelName, null, values);
+        internal static object Call(DataBaseContext dbContext, GlobalEnums.Api methodName, string modelName, object values)
+            => Call(dbContext, methodName, modelName, null, values);
 
-        private static object Call(GlobalEnums.Api methodName, string modelName, long? id, object values)
+        private static object Call(DataBaseContext dbContext, GlobalEnums.Api methodName, string modelName, long? id, object values)
         {
-            var service = ServiceResolver.GetService(modelName);
+            var service = ServiceResolver.GetService(dbContext, modelName);
             object result = null;
 
             switch (methodName)
