@@ -43,23 +43,7 @@ namespace Framework.Core
                 .Where(method => method.Name == "AddScoped" && method.GetGenericArguments().Length == 2 && method.GetParameters().Count() == 1)
                 .Single();
 
-            DeclareApiServicesAsScoped(services, addScopedGenericMethod);
             DeclareServicesAsScoped(services, addScopedGenericMethod);
-        }
-
-        private static void DeclareApiServicesAsScoped(IServiceCollection services, MethodInfo addScopedGenericMethod)
-        {
-            var useGenericApi = false;
-
-            if (!bool.TryParse(configuration["Framework:Configuration:UseGenericApi"], out useGenericApi) && !useGenericApi)
-                return;
-
-            foreach (var modelType in modelTypesInTheNamespace)
-            {
-                var genericServiceForDataModel = genericServiceType.MakeGenericType(modelType);
-                var addScopedMethod = addScopedGenericMethod.MakeGenericMethod(genericServiceForDataModel, genericServiceForDataModel);
-                addScopedMethod.Invoke(services, new object[] { services });
-            }
         }
 
         private static void DeclareServicesAsScoped(IServiceCollection services, MethodInfo addScopedGenericMethod)

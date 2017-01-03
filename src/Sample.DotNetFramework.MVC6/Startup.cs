@@ -1,5 +1,4 @@
 ﻿using Framework.Core;
-using Framework.Core.Attributes;
 using Framework.Core.Configuration;
 using Framework.Core.Extensions;
 using Framework.Core.DAL.Infrastructure;
