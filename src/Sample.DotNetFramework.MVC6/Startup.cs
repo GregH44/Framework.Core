@@ -52,12 +52,10 @@ namespace Sample.DotNetFramework.MVC6
             {
                 loggerFactory.AddDebug();
                 app.UseDeveloperExceptionPage();
-                //app.UseBrowserLink();
             }
             else
             {
-                loggerFactory.AddDebug();
-                app.UseExceptionHandler("/Transverse/Error");
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();

@@ -13,8 +13,7 @@ namespace Sample.DotNetFramework.MVC6.Areas.UserManager.Controller
     {
         private readonly IUserService userService = null;
 
-        public UserController(IUserService userService, ILogger<UserController> Logger)
-            : base(Logger)
+        public UserController(IUserService userService)
         {
             this.userService = userService;
         }

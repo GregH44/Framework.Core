@@ -1,6 +1,5 @@
 ﻿using Framework.Core.Attributes;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Framework.Core.Controller
 {
@@ -9,11 +8,9 @@ namespace Framework.Core.Controller
     public class ControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         public string CorrelationId { get; set; }
-        protected ILogger logger = null;
 
-        public ControllerBase(ILogger logger)
+        public ControllerBase()
         {
-            this.logger = logger;
         }
     }
 }

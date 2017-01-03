@@ -2,10 +2,11 @@
 
 namespace Sample.DotNetFramework.MVC6.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : Framework.Core.Controller.ControllerBase
     {
         public IActionResult Index()
         {
+            throw new System.Exception();
             return View();
         }
 
@@ -20,11 +21,6 @@ namespace Sample.DotNetFramework.MVC6.Controllers
         {
             ViewData["Message"] = "Your contact page.";
             
-            return View();
-        }
-
-        public IActionResult Error()
-        {
             return View();
         }
     }

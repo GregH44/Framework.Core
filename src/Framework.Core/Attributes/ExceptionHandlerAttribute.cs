@@ -1,4 +1,5 @@
 ﻿using Framework.Core.Constants;
+using Framework.Core.Controller;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -16,6 +17,16 @@ namespace Framework.Core.Attributes
         }
 
         public override void OnException(ExceptionContext context)
+        {
+            TraceException(context);
+
+            if (context.ActionDescriptor.RouteValues.Any(route => route.Key == "controller" && route.Value == "Generic"))
+            {
+                context.Result = GenericController.Error();
+            }
+        }
+
+        private void TraceException(ExceptionContext context)
         {
             if (context != null)
             {

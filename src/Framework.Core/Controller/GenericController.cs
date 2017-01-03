@@ -5,7 +5,6 @@ using Framework.Core.Models;
 using Framework.Core.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,8 +18,8 @@ namespace Framework.Core.Controller
     {
         private readonly DataBaseContext context = null;
 
-        public GenericController(ILogger<GenericController> logger, DataBaseContext context)
-            : base(logger)
+        public GenericController(DataBaseContext context)
+            : base()
         {
             this.context = context;
         }
@@ -30,7 +29,7 @@ namespace Framework.Core.Controller
         {
             IActionResult response = null;
             object values = GetObjectsFromJson(model, content.ToString());
-
+            
             var exceptions = ValidateModels(values);
             if (exceptions.Count() > 0)
             {
@@ -41,7 +40,7 @@ namespace Framework.Core.Controller
                 ServiceCaller.Call(context, GlobalEnums.Api.Add, model, values);
                 response = Ok();
             }
-
+            
             return response;
         }
 
@@ -77,6 +76,12 @@ namespace Framework.Core.Controller
         public IActionResult Get([FromRoute] string model, long? id)
         {
             return Json(ServiceCaller.Call(context, GlobalEnums.Api.Get, model, id));
+        }
+
+        [NonAction]
+        public static IActionResult Error()
+        {
+            return new ControllerBase().BadRequest("An unexpected error has occured. Please see log for more details.");
         }
 
         private object GetObjectsFromJson(string model, string content)
