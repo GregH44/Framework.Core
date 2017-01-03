@@ -34,12 +34,7 @@ namespace Sample.DotNetFramework.MVC6
                 GetType().Namespace,
                 model);
 
-            // Exception handler service
-            services.AddScoped<ExceptionHandlerAttribute>();
-            // CorrelationId manager service
-            services.AddScoped<CorrelationIdAttribute>();
-
-            FrameworkManager.Initialize(services);
+            services.InitializeFramework();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

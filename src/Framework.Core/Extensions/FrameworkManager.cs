@@ -16,7 +16,21 @@ namespace Framework.Core
         private static Type genericServiceType = null;
         private static IEnumerable<Type> modelTypesInTheNamespace = null;
 
-        public static void Initialize(IServiceCollection services)
+        public static void InitializeFramework(this IServiceCollection services)
+        {
+            InitializeFilters(services);
+            InitializeServices(services);
+        }
+
+        private static void InitializeFilters(IServiceCollection services)
+        {
+            // Exception handler service
+            services.AddScoped<ExceptionHandlerAttribute>();
+            // CorrelationId manager service
+            services.AddScoped<CorrelationIdAttribute>();
+        }
+        
+        private static void InitializeServices(IServiceCollection services)
         {
             genericServiceType = Assembly.Load(new AssemblyName("Framework.Core")).ExportedTypes.Single(type => type.Name.StartsWith("GenericService"));
             LoadModelTypes();

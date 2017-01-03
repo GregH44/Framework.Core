@@ -6,7 +6,6 @@ namespace Sample.DotNetFramework.MVC6.Controllers
     {
         public IActionResult Index()
         {
-            throw new System.Exception();
             return View();
         }
 
