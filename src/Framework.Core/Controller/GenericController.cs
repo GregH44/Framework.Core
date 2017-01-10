@@ -2,6 +2,7 @@
 using Framework.Core.DAL.Infrastructure;
 using Framework.Core.Enums;
 using Framework.Core.Models;
+using Framework.Core.Resolvers;
 using Framework.Core.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;

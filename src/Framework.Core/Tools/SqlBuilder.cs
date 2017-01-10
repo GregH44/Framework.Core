@@ -38,39 +38,13 @@ namespace Framework.Core.Tools
         private static string BuildDelete<TEntity>()
             where TEntity : class
         {
-            string query = "Delete From ";
-            var entityType = typeof(TEntity);
-            var tableAttributes = entityType.GetTypeInfo().GetCustomAttributes<TableAttribute>();
-
-            if (tableAttributes.Any())
-            {
-                query += $"[{tableAttributes.First().Name}] ";
-            }
-            else
-            {
-                query += $"[{entityType.Name}] ";
-            }
-
-            return query;
+            return $"Delete From [{GetTableName<TEntity>()}] ";
         }
 
         private static string BuildFrom<TEntity>()
             where TEntity : class
         {
-            string query = "From ";
-            var entityType = typeof(TEntity);
-            var tableAttributes = entityType.GetTypeInfo().GetCustomAttributes<TableAttribute>();
-
-            if (tableAttributes.Any())
-            {
-                query += $"[{tableAttributes.First().Name}] ";
-            }
-            else
-            {
-                query += $"[{entityType.Name}] ";
-            }
-
-            return query;
+            return $"From [{GetTableName<TEntity>()}] ";
         }
 
         private static string BuildSelect<TEntity>()
@@ -79,14 +53,14 @@ namespace Framework.Core.Tools
             StringBuilder queryBuilder = new StringBuilder("Select ");
             var entityType = typeof(TEntity);
             var properties = entityType.GetProperties();
-            
+
             foreach (var property in properties)
             {
                 var attributes = property.GetCustomAttributes<ColumnAttribute>();
-                
+
                 if (attributes.Count() > 1)
                     throw new InvalidOperationException("The input sequence contains more than one element.");
-                
+
                 if (attributes.Any())
                 {
                     var column = attributes.First();
@@ -120,6 +94,24 @@ namespace Framework.Core.Tools
             query += $"[{propertiesKey.First().Name}] = @{paramIdentifierName} ";
 
             return query;
+        }
+
+        private static string GetTableName<TEntity>()
+        {
+            var tableName = string.Empty;
+            var entityType = typeof(TEntity);
+            var tableAttributes = entityType.GetTypeInfo().GetCustomAttributes<TableAttribute>();
+
+            if (tableAttributes.Any())
+            {
+                tableName += $"{tableAttributes.First().Name} ";
+            }
+            else
+            {
+                tableName += $"{entityType.Name} ";
+            }
+
+            return tableName;
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Framework.Core.DAL.Infrastructure;
 using System.Reflection;
 using Framework.Core.DAL.Repository;
 using Framework.Core.Exceptions;
-using System.ComponentModel.DataAnnotations;
 
 namespace Framework.Core.Service
 {
@@ -29,16 +27,14 @@ namespace Framework.Core.Service
         public GenericService(DataBaseContext context) : base(context)
         {
         }
-
+        
         public override void Add(TDataModel entity)
         {
             try
             {
-                var property = typeof(TDataModel).GetProperties().SingleOrDefault(prop => prop.GetCustomAttributes<KeyAttribute>().Any());
-                
-                if (property != null)
-                    property.SetValue(entity, Activator.CreateInstance(property.PropertyType));
+                var identityPropertyInfo = FrameworkManager.GetIdentityPropertyInfoModelTypes(typeof(TDataModel).GetHashCode());
 
+                SetIdentityValueToDefaultValue(entity, identityPropertyInfo);
                 Repository.Add(entity);
                 Save();
             }
@@ -56,16 +52,14 @@ namespace Framework.Core.Service
         {
             try
             {
-                var property = typeof(TDataModel).GetProperties().SingleOrDefault(prop => prop.GetCustomAttributes<KeyAttribute>().Any());
+                var identityPropertyInfo = FrameworkManager.GetIdentityPropertyInfoModelTypes(typeof(TDataModel).GetHashCode());
 
                 foreach (var entity in entities)
                 {
-                    if (property != null)
-                        property.SetValue(entity, Activator.CreateInstance(property.PropertyType));
-
+                    SetIdentityValueToDefaultValue(entity, identityPropertyInfo);
                     Repository.Add(entity);
                 }
-                
+
                 Save();
             }
             catch (GenericRepositoryException ex)
@@ -104,6 +98,12 @@ namespace Framework.Core.Service
         {
             var method = Repository.GetType().GetMethod("GetList");
             return (Task<IEnumerable<TDataModel>>)method.Invoke(Repository, new object[] { null, null, null, null, null });
+        }
+
+        private void SetIdentityValueToDefaultValue(object instance, PropertyInfo identityPropertyInfo)
+        {
+            if (identityPropertyInfo != null)
+                identityPropertyInfo.SetValue(instance, 0);
         }
     }
 }

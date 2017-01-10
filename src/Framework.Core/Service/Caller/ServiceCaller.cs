@@ -1,9 +1,11 @@
-﻿using Framework.Core.Constants;
-using Framework.Core.DAL.Infrastructure;
+﻿using Framework.Core.DAL.Infrastructure;
 using Framework.Core.Enums;
+using Framework.Core.Resolvers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -11,6 +13,8 @@ namespace Framework.Core.Service
 {
     internal static class ServiceCaller
     {
+        private static ConcurrentDictionary<string, MethodInfo> methodsInfo = new ConcurrentDictionary<string, MethodInfo>();
+
         internal static object Call(DataBaseContext dbContext, GlobalEnums.Api methodName, string modelName)
             => Call(dbContext, methodName, modelName, null, null);
 
@@ -54,20 +58,19 @@ namespace Framework.Core.Service
 
         private static object InvokeMethod(object service, GlobalEnums.Api methodName, object[] parameters = null)
         {
-            MethodInfo methodToCall = null;
+            MethodInfo methodToCall = GetMethod(service, methodName, parameters);
             object result = null;
 
-            if (parameters != null)
+            if (parameters == null)
             {
-                methodToCall = service.GetType().GetMethod(methodName.ToString(), parameters.Select(param => param.GetType()).ToArray());
-            }
-            else
-            {
-                methodToCall = service.GetType().GetMethod(methodName.ToString());
                 parameters = methodToCall.GetParameters().Select(param => new List<object> { param.DefaultValue }).ToArray();
             }
 
-            var serviceResponse = methodToCall.Invoke(service, parameters);
+            var createMethod = methodToCall.CreateDelegate(Expression.GetDelegateType((from parameter in methodToCall.GetParameters() select parameter.ParameterType)
+                                    .Concat(new[] { methodToCall.ReturnType })
+                                    .ToArray()), service);
+
+            var serviceResponse = createMethod.DynamicInvoke(parameters);
 
             if (serviceResponse is Task)
             {
@@ -80,6 +83,27 @@ namespace Framework.Core.Service
             }
 
             return result;
+        }
+
+        private static MethodInfo GetMethod(object service, GlobalEnums.Api methodName, object[] parameters = null)
+        {
+            MethodInfo method = null;
+
+            if (!methodsInfo.TryGetValue(methodName.ToString(), out method))
+            {
+                if (parameters != null)
+                {
+                    method = service.GetType().GetMethod(methodName.ToString(), parameters.Select(param => param.GetType()).ToArray());
+                }
+                else
+                {
+                    method = service.GetType().GetMethod(methodName.ToString());
+                }
+
+                methodsInfo.TryAdd(methodName.ToString(), method);
+            }
+
+            return method;
         }
     }
 }

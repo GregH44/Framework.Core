@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sample.DotNetFramework.Common.DTO
 {
-    [CrudOperation("RUD")]
+    [CrudOperations(Create: false)]
     [Table("Sample")]
     public class SampleModel
     {
@@ -16,6 +16,6 @@ namespace Sample.DotNetFramework.Common.DTO
         public string SampleName { get; set; }
 
         [Column("Status")]
-        public int Status{ get; set; }
+        public int Status { get; set; }
     }
 }
