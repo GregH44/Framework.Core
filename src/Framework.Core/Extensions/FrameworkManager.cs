@@ -1,5 +1,6 @@
 ﻿using Framework.Core.Attributes;
 using Framework.Core.Configuration;
+using Framework.Core.Extensions;
 using Framework.Core.Resolvers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,6 @@ namespace Framework.Core
     public static class FrameworkManager
     {
         private static IConfigurationRoot configuration = ConfigurationManager.Configuration;
-        private static Type genericServiceType = null;
         private static SortedDictionary<string, Type> modelTypesInTheNamespace = new SortedDictionary<string, Type>();
         private static SortedDictionary<int, PropertyInfo> keysPropertyInfoModelTypes = new SortedDictionary<int, PropertyInfo>();
 
@@ -44,54 +44,38 @@ namespace Framework.Core
 
         private static void InitializeServices(IServiceCollection services)
         {
-            genericServiceType = Assembly.Load(new AssemblyName("Framework.Core")).ExportedTypes.Single(type => type.Name.StartsWith("GenericService"));
             LoadModelTypes();
-
             InitializeServiceResolver();
-
-            var addScopedGenericMethod =
-                typeof(ServiceCollectionServiceExtensions)
-                .GetMethods()
-                .Where(method => method.Name == "AddScoped" && method.GetGenericArguments().Length == 2 && method.GetParameters().Count() == 1)
-                .Single();
-
-            DeclareServicesAsScoped(services, addScopedGenericMethod);
+            DeclareServicesAsScoped(services);
         }
 
-        private static void DeclareServicesAsScoped(IServiceCollection services, MethodInfo addScopedGenericMethod)
+        private static void DeclareServicesAsScoped(IServiceCollection services)
         {
             var servicesLayerAssemblyName = configuration["Framework:Configuration:Services:Assembly"];
             if (string.IsNullOrEmpty(servicesLayerAssemblyName))
                 return;
 
+            var addScopedMethod =
+                typeof(ServiceCollectionServiceExtensions)
+                .GetMethods()
+                .Where(method => method.Name == "AddScoped" && method.GetGenericArguments().Length == 2 && method.GetParameters().Count() == 1)
+                .Single();
+
             var modelSuffix = configuration["Framework:Configuration:Models:ModelSuffix"];
 
-            var servicesInterfaces = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsInterface);
-            var servicesClasses = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsClass);
+            var serviceInterfaces = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsInterface);
+            var serviceClasses = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsClass);
 
             foreach (var kvpModelType in modelTypesInTheNamespace)
             {
-                var modelName = kvpModelType.Key;
-
-                if (!string.IsNullOrEmpty(modelSuffix) && kvpModelType.Key.EndsWith(modelSuffix))
-                {
-                    var indexSuffix = kvpModelType.Key.IndexOf(modelSuffix);
-                    modelName = kvpModelType.Key.Remove(indexSuffix);
-                }
-
-                var serviceInterface = servicesInterfaces.SingleOrDefault(svc => svc.Name == $"I{modelName}Service");
-                var serviceClass = servicesClasses.SingleOrDefault(svc => svc.Name == $"{modelName}Service");
-
-                if (serviceInterface != null && serviceClass != null)
-                {
-                    var addScopedMethod = addScopedGenericMethod.MakeGenericMethod(serviceInterface, serviceClass);
-                    addScopedMethod.Invoke(services, new object[] { services });
-                }
+                var modelName = kvpModelType.Key.DeleteSuffix(modelSuffix);
+                services.AddServicesAsScoped(addScopedMethod, modelName, serviceInterfaces, serviceClasses);
             }
         }
 
         private static void InitializeServiceResolver()
         {
+            var genericServiceType = Assembly.Load(new AssemblyName("Framework.Core")).ExportedTypes.Single(type => type.Name.StartsWith("GenericService"));
             new ServiceResolver(
                 configuration["Framework:Configuration:Models:ModelSuffix"],
                 modelTypesInTheNamespace,

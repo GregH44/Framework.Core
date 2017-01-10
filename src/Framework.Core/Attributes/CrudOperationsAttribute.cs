@@ -1,8 +1,6 @@
 ﻿using Framework.Core.Constants;
-using Framework.Core.Enums;
 using System;
 using System.Collections;
-using System.Linq;
 
 namespace Framework.Core.Attributes
 {
@@ -11,16 +9,14 @@ namespace Framework.Core.Attributes
     {
         public readonly BitArray crudOperationsAllowed;
 
-        /// <param name="crudOperationsAllowed">
-        /// <see cref="GlobalConstants.CrudOperations"/>
-        /// </param>
+        /// <param name="crudOperationsAllowed"></param>
         public CrudOperationsAttribute(bool Create = true, bool Receive = true, bool Update = true, bool Delete = true)
         {
             crudOperationsAllowed = new BitArray(4);
-            crudOperationsAllowed.Set(0, Create);
-            crudOperationsAllowed.Set(0, Receive);
-            crudOperationsAllowed.Set(0, Update);
-            crudOperationsAllowed.Set(0, Delete);
+            crudOperationsAllowed.Set(GlobalConstants.CrudOperations.Create, Create);
+            crudOperationsAllowed.Set(GlobalConstants.CrudOperations.Receive, Receive);
+            crudOperationsAllowed.Set(GlobalConstants.CrudOperations.Update, Update);
+            crudOperationsAllowed.Set(GlobalConstants.CrudOperations.Delete, Delete);
         }
     }
 }

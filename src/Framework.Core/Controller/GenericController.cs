@@ -69,7 +69,6 @@ namespace Framework.Core.Controller
         public IActionResult Delete([FromRoute] string model, long id)
         {
             ServiceCaller.Call(context, GlobalEnums.Api.Delete, model, id);
-
             return Ok();
         }
 

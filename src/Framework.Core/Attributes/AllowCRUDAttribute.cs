@@ -11,11 +11,6 @@ namespace Framework.Core.Attributes
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     internal class AllowCRUDAttribute : ActionFilterAttribute, IActionFilter
     {
-        private const byte CreateIndex = 0;
-        private const byte ReceiveIndex = 1;
-        private const byte UpdateIndex = 2;
-        private const byte DeleteIndex = 3;
-
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var modelName = context.ActionArguments.Single(arg => arg.Key == "model").Value.ToString();
@@ -26,19 +21,19 @@ namespace Framework.Core.Attributes
                 switch (context.RouteData.Values.Single(route => route.Key == "action").Value.ToString())
                 {
                     case nameof(GenericController.Add):
-                        if (!crudOperations[CreateIndex])
+                        if (!crudOperations[GlobalConstants.CrudOperations.Create])
                             context.Result = new UnauthorizedResult();
                         break;
                     case nameof(GenericController.Delete):
-                        if (!crudOperations[DeleteIndex])
+                        if (!crudOperations[GlobalConstants.CrudOperations.Delete])
                             context.Result = new UnauthorizedResult();
                         break;
                     case nameof(GenericController.Get):
-                        if (!crudOperations[ReceiveIndex])
+                        if (!crudOperations[GlobalConstants.CrudOperations.Receive])
                             context.Result = new UnauthorizedResult();
                         break;
                     case nameof(GenericController.Update):
-                        if (!crudOperations[UpdateIndex])
+                        if (!crudOperations[GlobalConstants.CrudOperations.Update])
                             context.Result = new UnauthorizedResult();
                         break;
                     default:

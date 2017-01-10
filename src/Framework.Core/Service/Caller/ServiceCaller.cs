@@ -66,11 +66,11 @@ namespace Framework.Core.Service
                 parameters = methodToCall.GetParameters().Select(param => new List<object> { param.DefaultValue }).ToArray();
             }
 
-            var createMethod = methodToCall.CreateDelegate(Expression.GetDelegateType((from parameter in methodToCall.GetParameters() select parameter.ParameterType)
+            var delegateToCall = methodToCall.CreateDelegate(Expression.GetDelegateType((from parameter in methodToCall.GetParameters() select parameter.ParameterType)
                                     .Concat(new[] { methodToCall.ReturnType })
                                     .ToArray()), service);
 
-            var serviceResponse = createMethod.DynamicInvoke(parameters);
+            var serviceResponse = delegateToCall.DynamicInvoke(parameters);
 
             if (serviceResponse is Task)
             {
