@@ -3,8 +3,48 @@ Framework.Core is a right way to build your Web application in ASP.NET Core (MVC
 Its cross-platform compatibility makes to deploy your application on Windows / Linux / MacOS.
 It was thought to reduce developement costs and includes natively, for example, a generic API to use CRUD operations.
 
-##Configuration
+##Advantages
+- Increase productivity for CRUD developments
+- Propose best practices natively
+- Designed flexibility for large or simple projects
+- Fast ramp-up
+- Ready to use with little configuration
+- Model first (optional)
 
-##Design principles
+##Technical Stack
+###Tools / Framework
+- Visual Studio 2015 Update 3 (or later)
+- ASP.NET Core (MVC 6 + Web API 2)
+- Entity Framework Core
+- Dapper.NET
+
+###Concept
+- Native Dependency Injection + Injection of Control (ASP.NET Core)
+- Model - View - Controller (MVC)
+- MVVM Pattern
+- Multitier architecture
+- Genericity
+- Reflection
+
+###Design Princles
+- KISS
+- Single Responsability
 
 ##Performance
+###Environments
+| Name       | Core | Memory (GB) | OS                  | Tool            |
+| ---------- | ---- | ----------- | ------------------- | --------------- |
+| WRK        |    8 |          28 | Ubuntu Server 16.10 | WRK             |
+| Web        |    4 |          14 | Ubuntu Server 16.10 | Kestrel         |
+| SQL Server |    8 |          28 | Ubuntu Server 16.10 | SQL Server 2016 |
+
+These environments have been deployed on Windows Azure.
+
+###Context
+This performance test was executed with WRK benchmark tool.
+SQL Server environment is limited to 30 concurrent connections. So, I have used :
+- Threads : 16
+- Connections open : 30
+- Duration : 10 minutes
+
+###Results
