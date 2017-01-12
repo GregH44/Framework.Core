@@ -1,6 +1,7 @@
 ﻿using Framework.Core.DAL.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Framework.Core.Resolvers
 {
@@ -35,12 +36,13 @@ namespace Framework.Core.Resolvers
 
         private static Type GetTypeFromModelName(string modelName)
         {
-            Type modelType = null;
+            var name = modelName.ToLower() + suffix.ToLower();
+            KeyValuePair<string, Type> kvpModelType = modelsTypeInTheNamespace.FirstOrDefault(model => model.Key.ToLower() == name);
 
-            if (!modelsTypeInTheNamespace.TryGetValue(modelName + suffix, out modelType))
+            if (kvpModelType.Value == null)
                 throw new Exception($"The model type {modelName} is not found into the configure namespace. See your configuration in the startup class !");
 
-            return modelType;
+            return kvpModelType.Value;
         }
     }
 }

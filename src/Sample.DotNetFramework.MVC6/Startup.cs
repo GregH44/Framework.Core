@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Framework.Core;
+using Framework.Core.Configuration;
+using Framework.Core.DAL.Infrastructure;
+using Framework.Core.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Framework.Core.Configuration;
-using Framework.Core.DAL.Infrastructure;
-using Framework.Core.Extensions;
-using Framework.Core;
 using System.IO;
 
 namespace Sample.DotNetFramework.MVC6
