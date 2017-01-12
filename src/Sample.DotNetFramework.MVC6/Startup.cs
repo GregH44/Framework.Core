@@ -1,15 +1,18 @@
-﻿using Framework.Core;
-using Framework.Core.Configuration;
-using Framework.Core.Extensions;
-using Framework.Core.DAL.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Framework.Core.Configuration;
+using Framework.Core.DAL.Infrastructure;
+using Framework.Core.Extensions;
+using Framework.Core;
 using System.IO;
-using Microsoft.EntityFrameworkCore;
 
 namespace Sample.DotNetFramework.MVC6
 {
@@ -25,6 +28,7 @@ namespace Sample.DotNetFramework.MVC6
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add framework services.
             services.AddMvc();
 
             var model = new GenericModelBuilder(Configuration).InitializeDataModels();
@@ -39,13 +43,12 @@ namespace Sample.DotNetFramework.MVC6
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddFile(string.Format("{0}-{1}.txt", Path.Combine(env.WebRootPath, env.ApplicationName), "{Date}"), LogLevel.Warning);
 
             if (env.IsDevelopment())
             {
-                loggerFactory.AddDebug();
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
             else
             {
@@ -62,8 +65,7 @@ namespace Sample.DotNetFramework.MVC6
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             /* If you want to use EF code first on startup, add the code below

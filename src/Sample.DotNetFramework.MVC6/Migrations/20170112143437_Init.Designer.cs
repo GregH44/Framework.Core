@@ -8,7 +8,7 @@ using Framework.Core.DAL.Infrastructure;
 namespace Sample.DotNetFramework.MVC6.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20161227091321_Init")]
+    [Migration("20170112143437_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

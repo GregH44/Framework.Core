@@ -13,12 +13,12 @@ namespace Framework.Core.Attributes
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var modelName = context.ActionArguments.Single(arg => arg.Key == "model").Value.ToString();
+            var modelName = context.ActionArguments.First(arg => arg.Key == "model").Value.ToString();
             var crudOperations = CrudResolver.GetCrudOperationsFromModelType(modelName);
 
             if (crudOperations != null)
             {
-                switch (context.RouteData.Values.Single(route => route.Key == "action").Value.ToString())
+                switch (context.RouteData.Values.First(route => route.Key == "action").Value.ToString())
                 {
                     case nameof(GenericController.Add):
                         if (!crudOperations[GlobalConstants.CrudOperations.Create])

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Sample.DotNetFramework.MVC6
@@ -16,6 +19,7 @@ namespace Sample.DotNetFramework.MVC6
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                //.UseUrls("http://*:80")
                 .UseUrls("http://*:5000")
                 .Build();
 

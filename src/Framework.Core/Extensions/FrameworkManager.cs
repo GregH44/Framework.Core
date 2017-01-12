@@ -15,8 +15,9 @@ namespace Framework.Core
     public static class FrameworkManager
     {
         private static IConfigurationRoot configuration = ConfigurationManager.Configuration;
-        private static SortedDictionary<string, Type> modelTypesInTheNamespace = new SortedDictionary<string, Type>();
         private static SortedDictionary<int, PropertyInfo> keysPropertyInfoModelTypes = new SortedDictionary<int, PropertyInfo>();
+        private static string modelSuffix = configuration["Framework:Configuration:Models:ModelSuffix"];
+        private static SortedDictionary<string, Type> modelTypesInTheNamespace = new SortedDictionary<string, Type>();
 
         public static void InitializeFramework(this IServiceCollection services)
         {
@@ -61,8 +62,6 @@ namespace Framework.Core
                 .Where(method => method.Name == "AddScoped" && method.GetGenericArguments().Length == 2 && method.GetParameters().Count() == 1)
                 .Single();
 
-            var modelSuffix = configuration["Framework:Configuration:Models:ModelSuffix"];
-
             var serviceInterfaces = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsInterface);
             var serviceClasses = Assembly.Load(new AssemblyName(servicesLayerAssemblyName)).ExportedTypes.Where(type => type.GetTypeInfo().IsClass);
 
@@ -77,7 +76,7 @@ namespace Framework.Core
         {
             var genericServiceType = Assembly.Load(new AssemblyName("Framework.Core")).ExportedTypes.Single(type => type.Name.StartsWith("GenericService"));
             new ServiceResolver(
-                configuration["Framework:Configuration:Models:ModelSuffix"],
+                modelSuffix,
                 modelTypesInTheNamespace,
                 genericServiceType
                 );
@@ -117,7 +116,7 @@ namespace Framework.Core
             var crudOperationAttribute = modelType.GetTypeInfo().GetCustomAttribute<CrudOperationsAttribute>();
 
             if (crudOperationAttribute != null && crudOperationAttribute.crudOperationsAllowed.Length > 0)
-                CrudResolver.crudOperationsModelTypes.Add(modelType.Name, crudOperationAttribute.crudOperationsAllowed);
+                CrudResolver.crudOperationsModelTypes.Add(modelType.Name.DeleteSuffix(modelSuffix), crudOperationAttribute.crudOperationsAllowed);
         }
     }
 }

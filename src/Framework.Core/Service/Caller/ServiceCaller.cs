@@ -14,6 +14,7 @@ namespace Framework.Core.Service
     internal static class ServiceCaller
     {
         private static ConcurrentDictionary<string, MethodInfo> methodsInfo = new ConcurrentDictionary<string, MethodInfo>();
+        private static ConcurrentDictionary<string, Type> delegateTypes = new ConcurrentDictionary<string, Type>();
 
         internal static object Call(DataBaseContext dbContext, GlobalEnums.Api methodName, string modelName)
             => Call(dbContext, methodName, modelName, null, null);
@@ -33,21 +34,21 @@ namespace Framework.Core.Service
             {
                 case GlobalEnums.Api.Add:
                     if (values == null) throw new ArgumentNullException($"'{nameof(values)}' cannot be null for {GlobalEnums.Api.Add.ToString()} operation.");
-                    result = InvokeMethod(service, GlobalEnums.Api.Add, new object[] { values });
+                    result = InvokeMethod(service, modelName, GlobalEnums.Api.Add, new object[] { values });
                     break;
                 case GlobalEnums.Api.Delete:
                     if (!id.HasValue) throw new ArgumentNullException($"'{nameof(id)}' cannot be null for {GlobalEnums.Api.Delete.ToString()} operation.");
-                    result = InvokeMethod(service, GlobalEnums.Api.Delete, new object[] { id.Value });
+                    result = InvokeMethod(service, modelName, GlobalEnums.Api.Delete, new object[] { id.Value });
                     break;
                 case GlobalEnums.Api.Get:
                     if (id.HasValue)
-                        result = InvokeMethod(service, GlobalEnums.Api.Get, new object[] { id.Value });
+                        result = InvokeMethod(service, modelName, GlobalEnums.Api.Get, new object[] { id.Value });
                     else
-                        result = InvokeMethod(service, GlobalEnums.Api.GetList);
+                        result = InvokeMethod(service, modelName, GlobalEnums.Api.GetList);
                     break;
                 case GlobalEnums.Api.Update:
                     if (values == null) throw new ArgumentNullException($"'{nameof(values)}' cannot be null for {GlobalEnums.Api.Update.ToString()} operation.");
-                    result = InvokeMethod(service, GlobalEnums.Api.Update, new object[] { values });
+                    result = InvokeMethod(service, modelName, GlobalEnums.Api.Update, new object[] { values });
                     break;
                 default:
                     throw new TargetException($"The method name {methodName.ToString()} is not found !");
@@ -56,9 +57,9 @@ namespace Framework.Core.Service
             return result;
         }
 
-        private static object InvokeMethod(object service, GlobalEnums.Api methodName, object[] parameters = null)
+        private static object InvokeMethod(object service, string modelName, GlobalEnums.Api methodName, object[] parameters = null)
         {
-            MethodInfo methodToCall = GetMethod(service, methodName, parameters);
+            MethodInfo methodToCall = GetMethod(service, modelName, methodName, parameters);
             object result = null;
 
             if (parameters == null)
@@ -66,11 +67,16 @@ namespace Framework.Core.Service
                 parameters = methodToCall.GetParameters().Select(param => new List<object> { param.DefaultValue }).ToArray();
             }
 
-            var delegateToCall = methodToCall.CreateDelegate(Expression.GetDelegateType((from parameter in methodToCall.GetParameters() select parameter.ParameterType)
+            Type delegateType = null;
+            if (!delegateTypes.TryGetValue($"{methodName.ToString()}{modelName}", out delegateType))
+            {
+                delegateType = Expression.GetDelegateType((from parameter in methodToCall.GetParameters() select parameter.ParameterType)
                                     .Concat(new[] { methodToCall.ReturnType })
-                                    .ToArray()), service);
-
-            var serviceResponse = delegateToCall.DynamicInvoke(parameters);
+                                    .ToArray());
+                delegateTypes.TryAdd($"{methodName.ToString()}{modelName}", delegateType);
+            }
+            
+            var serviceResponse = methodToCall.CreateDelegate(delegateType, service).DynamicInvoke(parameters);
 
             if (serviceResponse is Task)
             {
@@ -85,11 +91,11 @@ namespace Framework.Core.Service
             return result;
         }
 
-        private static MethodInfo GetMethod(object service, GlobalEnums.Api methodName, object[] parameters = null)
+        private static MethodInfo GetMethod(object service, string modelName, GlobalEnums.Api methodName, object[] parameters = null)
         {
             MethodInfo method = null;
 
-            if (!methodsInfo.TryGetValue(methodName.ToString(), out method))
+            if (!methodsInfo.TryGetValue($"{methodName.ToString()}{modelName}", out method))
             {
                 if (parameters != null)
                 {
@@ -100,7 +106,7 @@ namespace Framework.Core.Service
                     method = service.GetType().GetMethod(methodName.ToString());
                 }
 
-                methodsInfo.TryAdd(methodName.ToString(), method);
+                methodsInfo.TryAdd($"{methodName.ToString()}{modelName}", method);
             }
 
             return method;
