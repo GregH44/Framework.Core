@@ -2,6 +2,7 @@
 using Framework.Core.Configuration;
 using Framework.Core.DAL.Infrastructure;
 using Framework.Core.Extensions;
+using Framework.Core.DAL.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -68,7 +69,7 @@ namespace Sample.DotNetFramework.MVC6
              */
             using (var context = app.ApplicationServices.GetService<DataBaseContext>())
             {
-                context.Database.Migrate();
+                context.EnsureCreated();
             }
         }
     }
