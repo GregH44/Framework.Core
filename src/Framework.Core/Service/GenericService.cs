@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Framework.Core.Configuration;
 using Framework.Core.DAL.Infrastructure;
-using System.Reflection;
 using Framework.Core.DAL.Repository;
 using Framework.Core.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Framework.Core.Service
 {
@@ -32,7 +33,7 @@ namespace Framework.Core.Service
         {
             try
             {
-                var identityPropertyInfo = FrameworkManager.GetIdentityPropertyInfoModelTypes(typeof(TDataModel).GetHashCode());
+                var identityPropertyInfo = ConfigureFramework.GetIdentityPropertyInfoModelTypes(typeof(TDataModel).GetHashCode());
 
                 SetIdentityValueToDefaultValue(entity, identityPropertyInfo);
                 Repository.Add(entity);
@@ -52,7 +53,7 @@ namespace Framework.Core.Service
         {
             try
             {
-                var identityPropertyInfo = FrameworkManager.GetIdentityPropertyInfoModelTypes(typeof(TDataModel).GetHashCode());
+                var identityPropertyInfo = ConfigureFramework.GetIdentityPropertyInfoModelTypes(typeof(TDataModel).GetHashCode());
 
                 foreach (var entity in entities)
                 {

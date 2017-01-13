@@ -36,9 +36,9 @@ namespace Framework.Core.Configuration
             return Configuration;
         }
 
-        public static string ObtenirValeur(string cheminJson)
+        public static string GetValue(string jsonPath)
         {
-            return Configuration[cheminJson];
+            return Configuration[jsonPath];
         }
     }
 }

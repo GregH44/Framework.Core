@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Framework.Core.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Sample.DotNetFramework.Common.DTO;
 using Sample.DotNetFramework.MVC6.Areas.UserManager.ViewModels;
-using Sample.DotNetFramework.MVC6.Extensions;
 using Sample.DotNetFramework.ServicesLayer.Interfaces;
 using System.Threading.Tasks;
 

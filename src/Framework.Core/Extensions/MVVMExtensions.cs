@@ -1,8 +1,8 @@
-﻿using Sample.DotNetFramework.MVC6.Configuration;
+﻿using Framework.Core.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sample.DotNetFramework.MVC6.Extensions
+namespace Framework.Core.Extensions
 {
     public static class MVVMExtensions
     {
