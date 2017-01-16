@@ -3,6 +3,7 @@ using Framework.Core.DAL.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,8 +18,8 @@ namespace Framework.Core.DAL.Extensions
 
             CreateDatabaseIfNeeded(context, pendingMigrations);
         }
-        
-        /// <param name="sqlScriptsPathToDirectory">Path to directory which contains SQL scripts</param>
+
+        /// <param name="sqlScriptsPathToDirectory">Path to directory which contains SQL scripts (Ex : D:\SqlScriptsDirectory)</param>
         public static void MigrateDatabaseAndSeedData(this DatabaseContext context, string sqlScriptsPathToDirectory)
         {
             var pendingMigrations = context.Database.GetPendingMigrations();
@@ -40,12 +41,26 @@ namespace Framework.Core.DAL.Extensions
             if (string.IsNullOrEmpty(sqlScriptsPathToDirectory) || !Directory.Exists(sqlScriptsPathToDirectory))
                 throw new ArgumentException("The SQL script path is empty or not found.");
 
+            var connection = context.Database.GetDbConnection();
+
             foreach (var pendingMigration in pendingMigrations)
             {
-                string fullPath = Path.Combine(sqlScriptsPathToDirectory, pendingMigration + ".sql");
+                SeedData(sqlScriptsPathToDirectory, connection, pendingMigration);
+            }
+        }
 
-                if (File.Exists(fullPath))
-                    context.Database.GetDbConnection().QueryMultiple(File.ReadAllText(fullPath, Encoding.UTF8));
+        private static void SeedData(string sqlScriptsPathToDirectory, DbConnection connection, string pendingMigration)
+        {
+            string pendingMigrationDirectoryPath = Path.Combine(sqlScriptsPathToDirectory, pendingMigration);
+
+            if (Directory.Exists(pendingMigrationDirectoryPath))
+            {
+                var sqlScripts = Directory.GetFiles(pendingMigrationDirectoryPath, "*.sql");
+
+                foreach (var sqlScript in sqlScripts)
+                {
+                    connection.QueryMultiple(File.ReadAllText(sqlScript, Encoding.UTF8));
+                }
             }
         }
     }

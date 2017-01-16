@@ -69,7 +69,8 @@ namespace Sample.DotNetFramework.MVC6
              */
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                serviceScope.ServiceProvider.GetService<DatabaseContext>().MigrateDatabaseAndSeedData("D:\\SqlScripts");
+                //serviceScope.ServiceProvider.GetService<DatabaseContext>().MigrateDatabaseAndSeedData("D:\\SqlScripts");
+                serviceScope.ServiceProvider.GetService<DatabaseContext>().MigrateDatabase();
             }
         }
     }
