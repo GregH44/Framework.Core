@@ -8,7 +8,7 @@ namespace Framework.Core.Service
     public interface IServiceBase<TDataModel> : IDisposable
         where TDataModel : class
     {
-        DataBaseContext Context { get; }
+        DatabaseContext Context { get; }
 
         void Add(TDataModel entity);
 

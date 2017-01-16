@@ -29,7 +29,7 @@ namespace Sample.DotNetFramework.MVC6
             services.AddMvc();
 
             var model = new GenericModelBuilder(Configuration).InitializeDataModels();
-            services.AddDbContext<DataBaseContext>(
+            services.AddDbContext<DatabaseContext>(
                 Configuration["ConnectionStrings:DefaultConnection"],
                 GetType().Namespace,
                 model);
@@ -67,9 +67,9 @@ namespace Sample.DotNetFramework.MVC6
 
             /* If you want to use EF code first on startup, add the code below
              */
-            using (var context = app.ApplicationServices.GetService<DataBaseContext>())
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                context.EnsureCreated();
+                serviceScope.ServiceProvider.GetService<DatabaseContext>().MigrateDatabaseAndSeedData("D:\\SqlScripts");
             }
         }
     }

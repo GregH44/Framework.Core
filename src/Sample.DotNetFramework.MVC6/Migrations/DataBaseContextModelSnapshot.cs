@@ -7,7 +7,7 @@ using Framework.Core.DAL.Infrastructure;
 
 namespace Sample.DotNetFramework.MVC6.Migrations
 {
-    [DbContext(typeof(DataBaseContext))]
+    [DbContext(typeof(DatabaseContext))]
     partial class DataBaseContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

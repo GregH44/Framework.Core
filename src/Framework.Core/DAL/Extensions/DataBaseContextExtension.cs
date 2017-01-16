@@ -2,6 +2,7 @@
 using Framework.Core.DAL.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,31 +11,42 @@ namespace Framework.Core.DAL.Extensions
 {
     public static class DataBaseContextExtension
     {
-        public static void EnsureCreated(this DataBaseContext context)
+        public static void MigrateDatabase(this DatabaseContext context)
         {
-            CreateDatabaseIfNeeded(context);
+            var pendingMigrations = context.Database.GetPendingMigrations();
+
+            CreateDatabaseIfNeeded(context, pendingMigrations);
+        }
+        
+        /// <param name="sqlScriptsPathToDirectory">Path to directory which contains SQL scripts</param>
+        public static void MigrateDatabaseAndSeedData(this DatabaseContext context, string sqlScriptsPathToDirectory)
+        {
+            var pendingMigrations = context.Database.GetPendingMigrations();
+
+            CreateDatabaseIfNeeded(context, pendingMigrations);
+            SeedDataIfNeeded(context, sqlScriptsPathToDirectory, pendingMigrations);
         }
 
-        public static void EnsureCreatedAndSeedData(this DataBaseContext context, string sqlScriptPath)
+        private static void CreateDatabaseIfNeeded(DatabaseContext context, IEnumerable<string> pendingMigrations)
         {
-            CreateDatabaseIfNeeded(context);
-            SeedData(context, sqlScriptPath);
-        }
-
-        private static void CreateDatabaseIfNeeded(DataBaseContext context)
-        {
-            if (context.Database.GetPendingMigrations().Count() > 0)
+            if (pendingMigrations.Count() > 0)
             {
                 context.Database.Migrate();
             }
         }
 
-        private static void SeedData(DataBaseContext context, string sqlScriptFullPath)
+        private static void SeedDataIfNeeded(DatabaseContext context, string sqlScriptsPathToDirectory, IEnumerable<string> pendingMigrations)
         {
-            if (string.IsNullOrEmpty(sqlScriptFullPath) || !File.Exists(sqlScriptFullPath))
+            if (string.IsNullOrEmpty(sqlScriptsPathToDirectory) || !Directory.Exists(sqlScriptsPathToDirectory))
                 throw new ArgumentException("The SQL script path is empty or not found.");
 
-            context.Database.GetDbConnection().QueryMultiple(File.ReadAllText(sqlScriptFullPath, Encoding.UTF8));
+            foreach (var pendingMigration in pendingMigrations)
+            {
+                string fullPath = Path.Combine(sqlScriptsPathToDirectory, pendingMigration + ".sql");
+
+                if (File.Exists(fullPath))
+                    context.Database.GetDbConnection().QueryMultiple(File.ReadAllText(fullPath, Encoding.UTF8));
+            }
         }
     }
 }

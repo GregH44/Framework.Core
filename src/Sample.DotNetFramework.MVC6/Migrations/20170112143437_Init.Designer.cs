@@ -7,7 +7,7 @@ using Framework.Core.DAL.Infrastructure;
 
 namespace Sample.DotNetFramework.MVC6.Migrations
 {
-    [DbContext(typeof(DataBaseContext))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20170112143437_Init")]
     partial class Init
     {

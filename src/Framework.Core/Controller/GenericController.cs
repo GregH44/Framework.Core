@@ -17,9 +17,9 @@ namespace Framework.Core.Controller
     [Route("api/{model}/{id?}")]
     public class GenericController : ControllerBase
     {
-        private readonly DataBaseContext context = null;
+        private readonly DatabaseContext context = null;
 
-        public GenericController(DataBaseContext context)
+        public GenericController(DatabaseContext context)
             : base()
         {
             this.context = context;

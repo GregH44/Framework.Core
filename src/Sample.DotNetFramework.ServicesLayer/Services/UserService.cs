@@ -12,7 +12,7 @@ namespace Sample.DotNetFramework.ServicesLayer.Services
 {
     public sealed class UserService : ServiceBase<UserModel>, IUserService
     {
-        public UserService(DataBaseContext context) : base(context)
+        public UserService(DatabaseContext context) : base(context)
         {
         }
 

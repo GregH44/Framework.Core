@@ -21,7 +21,7 @@ namespace Framework.Core.Resolvers
             genericServiceType = genericService;
         }
 
-        internal static object GetService(DataBaseContext dbContext, string modelName)
+        internal static object GetService(DatabaseContext dbContext, string modelName)
         {
             var modelType = GetTypeFromModelName(modelName);
             var genericService = genericServiceType.MakeGenericType(modelType);

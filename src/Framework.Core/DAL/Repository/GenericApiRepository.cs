@@ -12,7 +12,7 @@ namespace Framework.Core.DAL.Repository
     internal sealed class GenericApiRepository<TEntity> : GenericRepository<TEntity>
         where TEntity : class
     {
-        internal GenericApiRepository(DataBaseContext context) : base(context)
+        internal GenericApiRepository(DatabaseContext context) : base(context)
         {
         }
 
