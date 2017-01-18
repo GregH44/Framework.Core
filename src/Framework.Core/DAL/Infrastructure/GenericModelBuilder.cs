@@ -12,8 +12,8 @@ namespace Framework.Core.DAL.Infrastructure
 {
     public class GenericModelBuilder
     {
-        private readonly ModelBuilder modelBuilder = null;
-        private readonly IConfigurationRoot configuration = null;
+        protected readonly ModelBuilder modelBuilder = null;
+        protected readonly IConfigurationRoot configuration = null;
 
         public GenericModelBuilder(IConfigurationRoot configuration)
         {

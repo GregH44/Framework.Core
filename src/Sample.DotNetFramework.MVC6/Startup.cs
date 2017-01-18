@@ -5,7 +5,6 @@ using Framework.Core.Extensions;
 using Framework.Core.DAL.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,12 +26,10 @@ namespace Sample.DotNetFramework.MVC6
         {
             // Add framework services.
             services.AddMvc();
-
-            var model = new GenericModelBuilder(Configuration).InitializeDataModels();
+            
             services.AddDbContext<DatabaseContext>(
                 Configuration["ConnectionStrings:DefaultConnection"],
-                GetType().Namespace,
-                model);
+                GetType().Namespace);
 
             services.Initialize();
         }
