@@ -28,7 +28,7 @@ namespace Sample.DotNetFramework.MVC6
             services.AddMvc();
             
             services.AddDbContext<DatabaseContext>(
-                Configuration["ConnectionStrings:DefaultConnection"],
+                "ConnectionStrings:DefaultConnection",
                 GetType().Namespace);
 
             services.Initialize();

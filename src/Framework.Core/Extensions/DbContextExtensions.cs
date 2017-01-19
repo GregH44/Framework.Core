@@ -10,28 +10,28 @@ namespace Framework.Core.Extensions
     {
         public static void AddDbContext<TContext>(
             this IServiceCollection services,
-            string connectionString,
+            string connectionStringJsonPath,
             string assemblyDestinationToGenerateMigrations)
             where TContext : DbContext
         {
             var model = new GenericModelBuilder(ConfigurationManager.Configuration).InitializeDataModels();
             services.AddDbContext<TContext>(optionsAction =>
             {
-                optionsAction.UseSqlServer(connectionString, sqlServerOptions => sqlServerOptions.MigrationsAssembly(assemblyDestinationToGenerateMigrations));
+                optionsAction.UseSqlServer(ConfigurationManager.GetValue(connectionStringJsonPath), sqlServerOptions => sqlServerOptions.MigrationsAssembly(assemblyDestinationToGenerateMigrations));
                 optionsAction.UseModel(model);
             });
         }
 
         public static void AddDbContext<TContext>(
             this IServiceCollection services,
-            string connectionString,
+            string connectionStringJsonPath,
             string assemblyDestinationToGenerateMigrations,
             IModel model)
             where TContext : DbContext
         {
             services.AddDbContext<TContext>(optionsAction =>
             {
-                optionsAction.UseSqlServer(connectionString, sqlServerOptions => sqlServerOptions.MigrationsAssembly(assemblyDestinationToGenerateMigrations));
+                optionsAction.UseSqlServer(ConfigurationManager.GetValue(connectionStringJsonPath), sqlServerOptions => sqlServerOptions.MigrationsAssembly(assemblyDestinationToGenerateMigrations));
                 optionsAction.UseModel(model);
             });
         }

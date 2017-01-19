@@ -78,12 +78,6 @@ namespace Framework.Core.Controller
             return Json(ServiceCaller.Call(context, GlobalEnums.Api.Get, model, id));
         }
 
-        [NonAction]
-        public static IActionResult Error()
-        {
-            return new ControllerBase().BadRequest("An unexpected error has occured. Please see log for more details.");
-        }
-
         private object GetObjectsFromJson(string model, string content)
         {
             var jToken = JToken.Parse(content);

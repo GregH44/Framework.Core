@@ -1,4 +1,5 @@
-﻿using Framework.Core.Constants;
+﻿using Framework.Core.Configuration;
+using Framework.Core.Constants;
 using Framework.Core.Controller;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -19,11 +20,7 @@ namespace Framework.Core.Attributes
         public override void OnException(ExceptionContext context)
         {
             TraceException(context);
-
-            if (context.ActionDescriptor.RouteValues.Any(route => route.Key == "controller" && route.Value == "Generic"))
-            {
-                context.Result = GenericController.Error();
-            }
+            InterceptErrorForApi(context);
         }
 
         private void TraceException(ExceptionContext context)
@@ -40,7 +37,7 @@ namespace Framework.Core.Attributes
                     correlationId = context.HttpContext.Items[GlobalConstants.CorrelationIdName].ToString();
                 }
 
-                string urlDonneesContexte = ObtenirUrlEtDonneesContexte(context);
+                string urlDonneesContexte = GetUrlAndDataContext(context);
 
                 if (context.Exception.InnerException == null)
                 {
@@ -62,7 +59,7 @@ namespace Framework.Core.Attributes
                 logger.LogCritical("Le contexte de l'exception vaut null !!!");
         }
 
-        private string ObtenirUrlEtDonneesContexte(ExceptionContext context)
+        private string GetUrlAndDataContext(ExceptionContext context)
         {
             var buildDatas = new StringBuilder("{");
 
@@ -85,6 +82,26 @@ namespace Framework.Core.Attributes
             buildDatas.Append("}");
 
             return buildDatas.ToString();
+        }
+
+        private void InterceptErrorForApi(ExceptionContext context)
+        {
+            if (context.ActionDescriptor.RouteValues.Any(route => route.Key == "controller" && route.Value == "Generic"))
+            {
+                int statusCodeErrorApi;
+
+                if (!int.TryParse(ConfigurationManager.GetValue("Framework:StatusCodeErrorAPI"), out statusCodeErrorApi))
+                {
+                    statusCodeErrorApi = 500;
+                }
+
+                var errorMessage = context.Exception.Message;
+
+                if (context.Exception.InnerException != null)
+                    errorMessage = context.Exception.InnerException.Message;
+
+                context.Result = new ControllerBase().StatusCode(statusCodeErrorApi, errorMessage);
+            }
         }
     }
 }
