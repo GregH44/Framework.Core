@@ -22,6 +22,12 @@ namespace Framework.Core.DAL.Repository
         void Add(IEnumerable<TEntity> entity);
 
         /// <summary>
+        /// Delete entity based on its primary key value
+        /// </summary>
+        /// <param name="entity">Entity to delete</param>
+        void Delete(object keyValue);
+
+        /// <summary>
         /// Delete entities based on the predicate
         /// </summary>
         /// <param name="predicate">Predicate used to delete entities</param>
@@ -47,6 +53,20 @@ namespace Framework.Core.DAL.Repository
         bool Exists(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
+        /// Get entity by its primary key value
+        /// </summary>
+        /// <param name="keyValue">The value of the primary key</param>
+        /// <returns>Return the entity ; Otherwise null</returns>
+        TEntity Get(object keyValue);
+
+        /// <summary>
+        /// Get entity that satisfy the predicate. If many, the first will be returned.
+        /// </summary>
+        /// <param name="predicate">Predicate used to get entity</param>
+        /// <returns>Return the entity that satisfy the predicate ; Otherwise null</returns>
+        TEntity Get(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+
+        /// <summary>
         /// Get entities that satisfy the predicate
         /// </summary>
         /// <param name="predicate">Predicate used to get entities</param>
@@ -60,13 +80,6 @@ namespace Framework.Core.DAL.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null, int? take = null,
             params Expression<Func<TEntity, object>>[] includeProperties);
-
-        /// <summary>
-        /// Get entity that satisfy the predicate. If many, the first will be returned.
-        /// </summary>
-        /// <param name="predicate">Predicate used to get entity</param>
-        /// <returns>Return the entity that satisfy the predicate</returns>
-        TEntity Get(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
 
         /// <summary>
         /// Persist entities stored into the DbContext to database

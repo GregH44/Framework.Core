@@ -59,7 +59,7 @@ namespace Sample.DotNetFramework.ServicesLayer.Services
         {
             try
             {
-                Repository.Delete(user => user.UserId == id);
+                Repository.Delete(id);
                 Save();
             }
             catch (GenericRepositoryException ex)
@@ -78,7 +78,7 @@ namespace Sample.DotNetFramework.ServicesLayer.Services
 
             try
             {
-                dataModel = Repository.Get(x => x.UserId == id);
+                dataModel = Repository.Get(id);
             }
             catch (GenericRepositoryException ex)
             {

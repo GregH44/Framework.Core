@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Framework.Core.DAL.Infrastructure;
+using Framework.Core.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
-using Framework.Core.DAL.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Framework.Core.Exceptions;
 
 namespace Framework.Core.DAL.Repository
 {
@@ -29,6 +31,21 @@ namespace Framework.Core.DAL.Repository
         public virtual void Add(IEnumerable<TEntity> entities)
         {
             dbSet.AddRange(entities);
+        }
+
+        public virtual void Delete(object keyValue)
+        {
+            try
+            {
+                var entity = Find(keyValue);
+
+                if (entity != null)
+                    Delete(entity);
+            }
+            catch (Exception exception)
+            {
+                throw new GenericRepositoryException("An error occurred while obtaining an entity !", exception);
+            }
         }
 
         public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
@@ -72,6 +89,18 @@ namespace Framework.Core.DAL.Repository
             catch (ArgumentNullException argumentNullException)
             {
                 throw new GenericRepositoryException("Source or predicate is null !", argumentNullException);
+            }
+        }
+
+        public virtual TEntity Get(object keyValue)
+        {
+            try
+            {
+                return Find(keyValue);
+            }
+            catch (Exception exception)
+            {
+                throw new GenericRepositoryException("An error occurred while obtaining an entity !", exception);
             }
         }
 
@@ -174,6 +203,19 @@ namespace Framework.Core.DAL.Repository
         public virtual void Update(IEnumerable<TEntity> entities)
         {
             dbSet.UpdateRange(entities);
+        }
+
+        private TEntity Find(object keyValue)
+        {
+            var entity = default(TEntity);
+            var primaryKeyProperty = typeof(TEntity).GetProperties().FirstOrDefault(prop => prop.GetCustomAttributes<KeyAttribute>().Any());
+
+            if (primaryKeyProperty != null && primaryKeyProperty.PropertyType != keyValue.GetType())
+                entity = dbSet.Find(Convert.ChangeType(keyValue, primaryKeyProperty.PropertyType));
+            else
+                entity = dbSet.Find(keyValue);
+
+            return entity;
         }
     }
 }
