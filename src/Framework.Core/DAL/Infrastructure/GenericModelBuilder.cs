@@ -25,7 +25,7 @@ namespace Framework.Core.DAL.Infrastructure
             this.configuration = configuration;
         }
 
-        public virtual IModel InitializeDataModels()
+        public virtual IModel InitializeEntities()
         {
             var assemblyModelsName = configuration["Framework:Configuration:Models:Assembly"];
             var namespaceModels = configuration["Framework:Configuration:Models:NamespaceModels"];

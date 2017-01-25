@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using Sample.DotNetFramework.DataLayer;
 
 namespace Sample.DotNetFramework.MVC6
 {
@@ -28,6 +29,10 @@ namespace Sample.DotNetFramework.MVC6
             services.AddMvc();
             
             services.AddDbContext<DatabaseContext>(
+                "ConnectionStrings:DefaultConnection",
+                GetType().Namespace);
+
+            services.AddDbContext<MyDbContext>(
                 "ConnectionStrings:DefaultConnection",
                 GetType().Namespace);
 

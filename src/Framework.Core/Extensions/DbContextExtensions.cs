@@ -14,7 +14,7 @@ namespace Framework.Core.Extensions
             string assemblyDestinationToGenerateMigrations)
             where TContext : DbContext
         {
-            var model = new GenericModelBuilder(ConfigurationManager.Configuration).InitializeDataModels();
+            var model = new GenericModelBuilder(ConfigurationManager.Configuration).InitializeEntities();
             services.AddDbContext<TContext>(optionsAction =>
             {
                 optionsAction.UseSqlServer(ConfigurationManager.GetValue(connectionStringJsonPath), sqlServerOptions => sqlServerOptions.MigrationsAssembly(assemblyDestinationToGenerateMigrations));
