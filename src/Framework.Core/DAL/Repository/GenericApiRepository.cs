@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Framework.Core.DAL.Infrastructure;
 using Framework.Core.Enums;
 using Framework.Core.Exceptions;
 using Framework.Core.Tools;
@@ -12,7 +11,7 @@ namespace Framework.Core.DAL.Repository
     internal sealed class GenericApiRepository<TEntity> : GenericRepository<TEntity>
         where TEntity : class
     {
-        internal GenericApiRepository(DatabaseContext context) : base(context)
+        internal GenericApiRepository(DbContext context) : base(context)
         {
         }
 

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using Sample.DotNetFramework.DataLayer;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sample.DotNetFramework.MVC6
 {
@@ -32,9 +33,10 @@ namespace Sample.DotNetFramework.MVC6
                 "ConnectionStrings:DefaultConnection",
                 GetType().Namespace);
 
-            services.AddDbContext<MyDbContext>(
-                "ConnectionStrings:DefaultConnection",
-                GetType().Namespace);
+            services.AddDbContext<MyDbContext>(options =>
+            {
+                options.UseSqlServer(ConfigurationManager.GetValue("ConnectionStrings:DefaultConnection"));
+            });
 
             services.Initialize();
         }

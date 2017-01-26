@@ -1,5 +1,4 @@
-﻿using Framework.Core.DAL.Infrastructure;
-using Framework.Core.Exceptions;
+﻿using Framework.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,10 +13,10 @@ namespace Framework.Core.DAL.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : class
     {
-        protected DatabaseContext context = null;
+        protected DbContext context = null;
         protected DbSet<TEntity> dbSet = null;
 
-        public GenericRepository(DatabaseContext context)
+        public GenericRepository(DbContext context)
         {
             this.context = context;
             dbSet = context.Set<TEntity>();

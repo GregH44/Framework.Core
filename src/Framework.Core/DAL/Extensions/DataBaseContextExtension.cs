@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Framework.Core.DAL.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace Framework.Core.DAL.Extensions
 {
     public static class DataBaseContextExtension
     {
-        public static void MigrateDatabase(this DatabaseContext context)
+        public static void MigrateDatabase(this DbContext context)
         {
             var pendingMigrations = context.Database.GetPendingMigrations();
 
@@ -20,7 +19,7 @@ namespace Framework.Core.DAL.Extensions
         }
 
         /// <param name="sqlScriptsPathToDirectory">Path to directory which contains SQL scripts (Ex : D:\SqlScriptsDirectory)</param>
-        public static void MigrateDatabaseAndSeedData(this DatabaseContext context, string sqlScriptsPathToDirectory)
+        public static void MigrateDatabaseAndSeedData(this DbContext context, string sqlScriptsPathToDirectory)
         {
             var pendingMigrations = context.Database.GetPendingMigrations();
 
@@ -28,7 +27,7 @@ namespace Framework.Core.DAL.Extensions
             SeedDataIfNeeded(context, sqlScriptsPathToDirectory, pendingMigrations);
         }
 
-        private static void CreateDatabaseIfNeeded(DatabaseContext context, IEnumerable<string> pendingMigrations)
+        private static void CreateDatabaseIfNeeded(DbContext context, IEnumerable<string> pendingMigrations)
         {
             if (pendingMigrations.Count() > 0)
             {
@@ -36,7 +35,7 @@ namespace Framework.Core.DAL.Extensions
             }
         }
 
-        private static void SeedDataIfNeeded(DatabaseContext context, string sqlScriptsPathToDirectory, IEnumerable<string> pendingMigrations)
+        private static void SeedDataIfNeeded(DbContext context, string sqlScriptsPathToDirectory, IEnumerable<string> pendingMigrations)
         {
             if (string.IsNullOrEmpty(sqlScriptsPathToDirectory) || !Directory.Exists(sqlScriptsPathToDirectory))
                 throw new ArgumentException("The SQL script path is empty or not found.");

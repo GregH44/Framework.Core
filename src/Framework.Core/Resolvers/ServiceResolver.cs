@@ -1,4 +1,4 @@
-﻿using Framework.Core.DAL.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Framework.Core.Resolvers
             genericServiceType = genericService;
         }
 
-        internal static object GetService(DatabaseContext dbContext, string modelName)
+        internal static object GetService(DbContext dbContext, string modelName)
         {
             var modelType = GetTypeFromModelName(modelName);
             var genericService = genericServiceType.MakeGenericType(modelType);

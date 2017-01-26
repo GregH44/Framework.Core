@@ -6,6 +6,7 @@ using Framework.Core.Resolvers;
 using Framework.Core.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Framework.Core.Controller
     [Route("api/{model}/{id?}")]
     public class GenericController : ControllerBase
     {
-        private readonly DatabaseContext context = null;
+        private readonly DbContext context = null;
 
         public GenericController(DatabaseContext context)
             : base()

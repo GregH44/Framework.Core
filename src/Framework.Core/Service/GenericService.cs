@@ -1,7 +1,7 @@
 ﻿using Framework.Core.Configuration;
-using Framework.Core.DAL.Infrastructure;
 using Framework.Core.DAL.Repository;
 using Framework.Core.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -25,7 +25,7 @@ namespace Framework.Core.Service
             }
         }
 
-        public GenericService(DatabaseContext context) : base(context)
+        public GenericService(DbContext context) : base(context)
         {
         }
         

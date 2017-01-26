@@ -1,4 +1,4 @@
-﻿using Framework.Core.DAL.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ namespace Framework.Core.Service
     public interface IServiceBase<TDataModel> : IDisposable
         where TDataModel : class
     {
-        DatabaseContext Context { get; }
+        DbContext Context { get; }
 
         void Add(TDataModel entity);
 

@@ -1,6 +1,6 @@
-﻿using Framework.Core.DAL.Infrastructure;
-using Framework.Core.Enums;
+﻿using Framework.Core.Enums;
 using Framework.Core.Resolvers;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,16 +16,16 @@ namespace Framework.Core.Service
         private static ConcurrentDictionary<string, MethodInfo> methodsInfo = new ConcurrentDictionary<string, MethodInfo>();
         private static ConcurrentDictionary<string, Type> delegateTypes = new ConcurrentDictionary<string, Type>();
 
-        internal static object Call(DatabaseContext dbContext, GlobalEnums.Api methodName, string modelName)
+        internal static object Call(DbContext dbContext, GlobalEnums.Api methodName, string modelName)
             => Call(dbContext, methodName, modelName, null, null);
 
-        internal static object Call(DatabaseContext dbContext, GlobalEnums.Api methodName, string modelName, long? id)
+        internal static object Call(DbContext dbContext, GlobalEnums.Api methodName, string modelName, long? id)
             => Call(dbContext, methodName, modelName, id, null);
 
-        internal static object Call(DatabaseContext dbContext, GlobalEnums.Api methodName, string modelName, object values)
+        internal static object Call(DbContext dbContext, GlobalEnums.Api methodName, string modelName, object values)
             => Call(dbContext, methodName, modelName, null, values);
 
-        private static object Call(DatabaseContext dbContext, GlobalEnums.Api methodName, string modelName, long? id, object values)
+        private static object Call(DbContext dbContext, GlobalEnums.Api methodName, string modelName, long? id, object values)
         {
             var service = ServiceResolver.GetService(dbContext, modelName);
             object result = null;

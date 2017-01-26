@@ -3,10 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Sample.DotNetFramework.DataLayer
 {
-    public class MyDbContext : DatabaseContext
+    public class MyDbContext : DbContext
     {
-        public MyDbContext(DbContextOptions<DatabaseContext> options) : base(options)
+        public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

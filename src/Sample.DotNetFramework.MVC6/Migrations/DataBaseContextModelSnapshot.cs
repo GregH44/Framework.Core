@@ -3,11 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Framework.Core.DAL.Infrastructure;
 
 namespace Sample.DotNetFramework.MVC6.Migrations
 {
-    [DbContext(typeof(DatabaseContext))]
+    [DbContext(typeof(DbContext))]
     partial class DataBaseContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

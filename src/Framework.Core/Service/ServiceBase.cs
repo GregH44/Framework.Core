@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Framework.Core.DAL.Infrastructure;
 using Framework.Core.DAL.Repository;
 using Framework.Core.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Framework.Core.Service
 {
     public abstract class ServiceBase<TDataModel> : IServiceBase<TDataModel>
         where TDataModel : class
     {
-        protected DatabaseContext context = null;
+        protected DbContext context = null;
         protected IGenericRepository<TDataModel> repository = null;
 
-        public DatabaseContext Context
+        public DbContext Context
         {
             get
             {
@@ -34,7 +34,7 @@ namespace Framework.Core.Service
             }
         }
 
-        public ServiceBase(DatabaseContext context)
+        public ServiceBase(DbContext context)
         {
             this.context = context;
         }
