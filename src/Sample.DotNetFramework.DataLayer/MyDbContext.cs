@@ -1,5 +1,6 @@
 ﻿using Framework.Core.DAL.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Sample.DotNetFramework.Common.DTO;
 
 namespace Sample.DotNetFramework.DataLayer
 {
@@ -11,7 +12,8 @@ namespace Sample.DotNetFramework.DataLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<UserModel>();
+            modelBuilder.Entity<SampleModel>();
         }
     }
 }

@@ -55,43 +55,6 @@ namespace Sample.DotNetFramework.ServicesLayer.Services
             }
         }
 
-        public override void Delete(long id)
-        {
-            try
-            {
-                Repository.Delete(id);
-                Save();
-            }
-            catch (GenericRepositoryException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw new ServiceLayerException("An error occurred while deleting user !", ex);
-            }
-        }
-
-        public override UserModel Get(long id)
-        {
-            UserModel dataModel = null;
-
-            try
-            {
-                dataModel = Repository.Get(id);
-            }
-            catch (GenericRepositoryException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw new ServiceLayerException("An error occurred while getting user !", ex);
-            }
-
-            return dataModel;
-        }
-
         public override Task<IEnumerable<UserModel>> GetList(object searchModel = null)
         {
             Task<IEnumerable<UserModel>> users = null;

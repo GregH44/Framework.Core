@@ -83,15 +83,15 @@ namespace Framework.Core.Service
             throw new NotImplementedException();
         }
 
-        public override void Delete(long id)
+        public override void Delete(object id)
         {
-            var method = ((GenericApiRepository<TDataModel>)Repository).GetType().GetMethod("Delete", new Type[] { typeof(long) });
+            var method = ((GenericApiRepository<TDataModel>)Repository).GetType().GetMethod("Delete", new Type[] { typeof(object) });
             method.Invoke((GenericApiRepository<TDataModel>)Repository, new object[] { id });
         }
 
-        public override TDataModel Get(long id)
+        public override TDataModel Get(object id)
         {
-            var method = ((GenericApiRepository<TDataModel>)Repository).GetType().GetMethod("Get", new Type[] { typeof(long) });
+            var method = ((GenericApiRepository<TDataModel>)Repository).GetType().GetMethod("Get", new Type[] { typeof(object) });
             return (TDataModel)method.Invoke((GenericApiRepository<TDataModel>)Repository, new object[] { id });
         }
 
@@ -104,7 +104,7 @@ namespace Framework.Core.Service
         private void SetIdentityValueToDefaultValue(object instance, PropertyInfo identityPropertyInfo)
         {
             if (identityPropertyInfo != null)
-                identityPropertyInfo.SetValue(instance, 0);
+                identityPropertyInfo.SetValue(instance, Activator.CreateInstance(identityPropertyInfo.PropertyType));
         }
     }
 }

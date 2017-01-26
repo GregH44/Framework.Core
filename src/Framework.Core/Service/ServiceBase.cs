@@ -94,7 +94,22 @@ namespace Framework.Core.Service
             }
         }
 
-        public abstract void Delete(long id);
+        public virtual void Delete(object id)
+        {
+            try
+            {
+                Repository.Delete(id);
+                Save();
+            }
+            catch (GenericRepositoryException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceLayerException("An error occurred while deleting user !", ex);
+            }
+        }
 
         public virtual void Delete(IEnumerable<TDataModel> entities)
         {
@@ -143,7 +158,25 @@ namespace Framework.Core.Service
             }
         }
 
-        public abstract TDataModel Get(long id);
+        public virtual TDataModel Get(object id)
+        {
+            TDataModel dataModel = null;
+
+            try
+            {
+                dataModel = Repository.Get(id);
+            }
+            catch (GenericRepositoryException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ServiceLayerException("An error occurred while getting user !", ex);
+            }
+
+            return dataModel;
+        }
 
         public abstract Task<IEnumerable<TDataModel>> GetList(object searchModel = null);
 

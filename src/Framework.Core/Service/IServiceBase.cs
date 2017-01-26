@@ -18,7 +18,7 @@ namespace Framework.Core.Service
 
         void AddOrUpdate(IEnumerable<TDataModel> entities);
 
-        void Delete(long id);
+        void Delete(object id);
 
         void Delete(TDataModel entity);
 
@@ -26,7 +26,7 @@ namespace Framework.Core.Service
 
         Task<IEnumerable<TDataModel>> GetList(object searchModel = null);
 
-        TDataModel Get(long id);
+        TDataModel Get(object id);
 
         int Save();
 

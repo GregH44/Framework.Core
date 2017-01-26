@@ -15,7 +15,7 @@ namespace Framework.Core.DAL.Repository
         {
         }
 
-        public void Delete(long id)
+        public override void Delete(object keyValue)
         {
             try
             {
@@ -23,24 +23,24 @@ namespace Framework.Core.DAL.Repository
                     SqlBuilder.Build<TEntity>(GlobalEnums.SqlBuildOperation.Delete, "Identifier"),
                     new
                     {
-                        Identifier = id
+                        Identifier = keyValue.GetType()
                     });
             }
             catch (Exception exception)
             {
-                throw new GenericRepositoryException($"An error occurred while obtaining an entity [id={id}] !", exception);
+                throw new GenericRepositoryException($"An error occurred while obtaining an entity [id={keyValue}] !", exception);
             }
         }
 
-        public TEntity Get(long id)
+        public override TEntity Get(object keyValue)
         {
             try
             {
-                return dbSet.FromSql(SqlBuilder.Build<TEntity>(GlobalEnums.SqlBuildOperation.Select, "p0"), id).SingleOrDefault();
+                return dbSet.FromSql(SqlBuilder.Build<TEntity>(GlobalEnums.SqlBuildOperation.Select, "p0"), keyValue).SingleOrDefault();
             }
             catch (Exception exception)
             {
-                throw new GenericRepositoryException($"An error occurred while obtaining an entity [id={id}] !", exception);
+                throw new GenericRepositoryException($"An error occurred while obtaining an entity [id={keyValue}] !", exception);
             }
         }
     }
